@@ -1,0 +1,40 @@
+[package]
+name = "dirmacs-ui"
+version = "0.1.0"
+edition = "2021"
+description = "Shared Leptos UI component library for Dirmacs applications"
+license = "MIT"
+authors = ["Dirmacs Team"]
+
+[lib]
+crate-type = ["rlib"]
+
+[dependencies]
+leptos = { version = "0.7", features = ["csr"] }
+
+serde = { version = "1.0", features = ["derive"] }
+
+wasm-bindgen = "0.2"
+wasm-bindgen-futures = "0.4"
+js-sys = "0.3"
+web-sys = { version = "0.3", features = [
+    "console",
+    "Window",
+    "Document",
+    "Element",
+    "HtmlElement",
+    "HtmlInputElement",
+    "HtmlSelectElement",
+    "Event",
+    "FocusEvent",
+    "KeyboardEvent",
+    "MouseEvent",
+    "DomTokenList",
+    "CssStyleDeclaration",
+    "DomRect",
+    "HtmlCollection",
+    "NodeList",
+    "EventTarget",
+] }
+
+gloo-timers = "0.3"
