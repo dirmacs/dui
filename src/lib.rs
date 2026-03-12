@@ -29,6 +29,7 @@ pub mod progress_bar;
 pub mod select;
 pub mod sidebar;
 pub mod skeleton;
+pub mod stats_card;
 pub mod status_badge;
 pub mod table;
 pub mod tabs;
@@ -49,6 +50,7 @@ pub mod prelude {
     pub use crate::select::*;
     pub use crate::sidebar::*;
     pub use crate::skeleton::*;
+    pub use crate::stats_card::*;
     pub use crate::status_badge::*;
     pub use crate::table::*;
     pub use crate::tabs::*;

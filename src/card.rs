@@ -24,8 +24,8 @@ pub fn Card(
     #[prop(default = CardGlow::None)]
     glow: CardGlow,
     /// Optional extra CSS classes on the outer wrapper.
-    #[prop(default = "")]
-    class: &'static str,
+    #[prop(default = String::new(), into)]
+    class: String,
     /// Header slot (optional).
     #[prop(optional)]
     header: Option<Children>,
