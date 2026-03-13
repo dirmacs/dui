@@ -61,17 +61,23 @@ pub fn Modal(
                 }
             }
         >
-            <div class=format!(
-                "bg-dm-panel border border-dm rounded-xl shadow-2xl w-full {}",
-                max_width
-            )>
+            <div
+                role="dialog"
+                aria-modal="true"
+                aria-label=title
+                class=format!(
+                    "bg-dm-panel border border-dm rounded-xl shadow-2xl w-full {}",
+                    max_width
+                )
+            >
                 // Title bar
                 {has_title.then(|| view! {
                     <div class="flex items-center justify-between px-6 py-4 border-b border-dm">
                         <h2 class="text-lg font-semibold text-dm-text">{title}</h2>
                         <button
                             on:click=move |_| open.set(false)
-                            class="p-1 rounded-md text-dm-muted hover:text-dm-text hover:bg-dm-hover transition-colors"
+                            aria-label="Close dialog"
+                            class="p-1 rounded-md text-dm-muted hover:text-dm-text hover:bg-dm-hover transition-colors dm-focus-ring"
                         >
                             <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none"
                                  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">

@@ -56,11 +56,14 @@ pub fn AlertBanner(
 
     view! {
         <Show when=move || visible.get()>
-            <div class=format!(
-                "flex items-center gap-3 px-4 py-3 rounded-lg border \
-                 animate-dm-fade-in-up {} {}",
-                bg, border
-            )>
+            <div
+                role="alert"
+                class=format!(
+                    "flex items-center gap-3 px-4 py-3 rounded-lg border \
+                     animate-dm-fade-in-up {} {}",
+                    bg, border
+                )
+            >
                 // Icon
                 <svg class=format!("w-5 h-5 shrink-0 {}", text)
                      xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -74,8 +77,9 @@ pub fn AlertBanner(
                 // Dismiss
                 {dismissible.then(|| view! {
                     <button
+                        aria-label="Dismiss alert"
                         class=format!(
-                            "p-1 rounded-md hover:bg-white/5 transition-colors {} shrink-0",
+                            "p-1 rounded-md hover:bg-white/5 transition-colors {} shrink-0 dm-focus-ring",
                             text
                         )
                         on:click=move |_| visible.set(false)

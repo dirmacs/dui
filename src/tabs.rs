@@ -33,21 +33,29 @@ pub fn Tabs(
     let on_change = std::rc::Rc::new(on_change);
 
     view! {
-        <div class=format!(
-            "flex items-center border-b border-dm gap-1 {}",
-            class
-        )>
+        <div
+            role="tablist"
+            class=format!(
+                "flex items-center border-b border-dm gap-1 {}",
+                class
+            )
+        >
             {items.into_iter().map(|tab| {
-                let key = tab.key.clone();
+                let key_aria = tab.key.clone();
+                let key_tab = tab.key.clone();
+                let key_class = tab.key.clone();
                 let key2 = tab.key.clone();
                 let key3 = tab.key.clone();
                 let on_change = on_change.clone();
                 view! {
                     <button
+                        role="tab"
+                        aria-selected=move || (active_tab.get() == key_aria).to_string()
+                        tabindex=move || if active_tab.get() == key_tab { "0" } else { "-1" }
                         class=move || format!(
                             "relative px-4 py-2.5 text-sm font-medium transition-colors duration-150 \
-                             rounded-t-lg -mb-px {}",
-                            if active_tab.get() == key {
+                             rounded-t-lg -mb-px dm-focus-ring {}",
+                            if active_tab.get() == key_class {
                                 "text-dm-accent"
                             } else {
                                 "text-dm-muted hover:text-dm-text"

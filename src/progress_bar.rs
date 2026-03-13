@@ -58,10 +58,16 @@ pub fn ProgressBar(
             })}
 
             // Track
-            <div class=format!(
-                "w-full bg-dm-elevated rounded-full overflow-hidden {}",
-                height
-            )>
+            <div
+                role="progressbar"
+                aria-valuenow=move || format!("{:.0}", clamped())
+                aria-valuemin="0"
+                aria-valuemax="100"
+                class=format!(
+                    "w-full bg-dm-elevated rounded-full overflow-hidden {}",
+                    height
+                )
+            >
                 // Fill
                 <div
                     class=move || format!(

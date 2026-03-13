@@ -61,6 +61,7 @@ pub fn Tooltip(
 
             <Show when=move || hovered.get()>
                 <div
+                    role="tooltip"
                     class=format!(
                         "absolute {} px-2.5 py-1.5 text-xs font-medium text-dm-text \
                          bg-dm-elevated border border-dm rounded-md shadow-lg \
