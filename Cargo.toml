@@ -1,12 +1,12 @@
 [package]
-name = "dirmacs-ui"
+name = "dui"
 version = "0.2.0"
 edition = "2021"
-description = "A production-ready Leptos 0.7 component library — 29 accessible, signal-driven components with a dark-first design system"
+description = "DUI — A production-ready Leptos 0.7 component library. 29 accessible, signal-driven components with a dark-first design system."
 license = "MIT"
 authors = ["Dirmacs <dev@dirmacs.com>"]
-repository = "https://github.com/dirmacs/dirmacs-ui"
-homepage = "https://github.com/dirmacs/dirmacs-ui"
+repository = "https://github.com/dirmacs/dui"
+homepage = "https://github.com/dirmacs/dui"
 keywords = ["leptos", "components", "ui", "wasm", "frontend"]
 categories = ["gui", "wasm", "web-programming"]
 readme = "README.md"

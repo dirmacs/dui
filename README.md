@@ -1,11 +1,11 @@
-# dirmacs-ui
+# dui
 
 A production-ready **Leptos 0.7** component library — 29 accessible, signal-driven components with a dark-first design system and light mode support.
 
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Rust](https://img.shields.io/badge/rust-1.75+-orange.svg)](https://www.rust-lang.org)
 
-## Why dirmacs-ui?
+## Why dui?
 
 - **29 components** — Forms, data display, navigation, overlays, feedback, layout
 - **Accessible** — ARIA roles, keyboard navigation, focus management, `prefers-reduced-motion`
@@ -20,19 +20,19 @@ Add to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-dirmacs-ui = { path = "../dirmacs-ui" }  # or from crates.io when published
+dui = { path = "../dui" }  # or from crates.io when published
 ```
 
 Link the CSS in your `index.html`:
 
 ```html
-<link rel="stylesheet" href="/dirmacs-ui.css" />
+<link rel="stylesheet" href="/dui.css" />
 ```
 
 Import and use:
 
 ```rust
-use dirmacs_ui::prelude::*;
+use dui::prelude::*;
 
 #[component]
 fn App() -> impl IntoView {
@@ -236,7 +236,7 @@ All interactive components include:
 
 ## Design Tokens
 
-The full token set is defined in `css/dirmacs-ui.css`:
+The full token set is defined in `css/dui.css`:
 
 | Category | Tokens |
 |----------|--------|

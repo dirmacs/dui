@@ -1,4 +1,4 @@
-//! # dirmacs-ui
+//! # DUI
 //!
 //! A production-ready Leptos 0.7 component library with 29 accessible,
 //! signal-driven components and a dark-first design system.
@@ -15,11 +15,11 @@
 //!
 //! ```toml
 //! [dependencies]
-//! dirmacs-ui = "0.2"
+//! DUI = "0.2"
 //! ```
 //!
 //! ```rust,ignore
-//! use dirmacs_ui::prelude::*;
+//! use dui::prelude::*;
 //!
 //! #[component]
 //! fn MyApp() -> impl IntoView {
@@ -35,7 +35,7 @@
 //!
 //! ## CSS Setup
 //!
-//! Link `dirmacs-ui.css` in your HTML. For light mode, add `data-theme="light"`
+//! Link `DUI.css` in your HTML. For light mode, add `data-theme="light"`
 //! to your `<html>` element, or let it auto-detect via `prefers-color-scheme`.
 //!
 //! ## Components
