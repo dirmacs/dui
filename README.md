@@ -20,7 +20,14 @@ Add to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-dui = { path = "../dui" }  # or from crates.io when published
+dui-leptos = "0.2"
+```
+
+Or from a local path:
+
+```toml
+[dependencies]
+dui-leptos = { path = "../dui" }
 ```
 
 Link the CSS in your `index.html`:
