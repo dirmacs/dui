@@ -32,12 +32,8 @@ pub fn Modal(
             }
         });
         let _ = window.add_event_listener_with_callback("keydown", cb.as_ref().unchecked_ref());
-        let cb_ref = cb.as_ref().unchecked_ref::<js_sys::Function>().clone();
-        on_cleanup(move || {
-            if let Some(w) = web_sys::window() {
-                let _ = w.remove_event_listener_with_callback("keydown", &cb_ref);
-            }
-        });
+        // Modal uses CSS visibility toggling, so the escape listener is harmless when hidden.
+        // forget() keeps the closure alive for the page lifetime.
         cb.forget();
     });
 
