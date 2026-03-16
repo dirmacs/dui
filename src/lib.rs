@@ -57,6 +57,7 @@ pub mod breadcrumb;
 pub mod button;
 pub mod card;
 pub mod checkbox;
+pub mod chip_select;
 pub mod command;
 pub mod divider;
 pub mod dropdown;
@@ -89,6 +90,7 @@ pub mod prelude {
     pub use crate::button::*;
     pub use crate::card::*;
     pub use crate::checkbox::*;
+ pub use crate::chip_select::*;
     pub use crate::command::*;
     pub use crate::divider::*;
     pub use crate::dropdown::*;
