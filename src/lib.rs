@@ -23,13 +23,13 @@
 //!
 //! #[component]
 //! fn MyApp() -> impl IntoView {
-//!     provide_toast();
-//!     view! {
-//!         <Button variant=ButtonVariant::Primary on_click=Box::new(|_| {})>
-//!             "Click me"
-//!         </Button>
-//!         <ToastContainer />
-//!     }
+//! provide_toast();
+//! view! {
+//! <Button variant=ButtonVariant::Primary on_click=Box::new(|_| {})>
+//! "Click me"
+//! </Button>
+//! <ToastContainer />
+//! }
 //! }
 //! ```
 //!
@@ -62,12 +62,14 @@ pub mod command;
 pub mod divider;
 pub mod dropdown;
 pub mod empty_state;
+pub mod file_upload;
 pub mod input;
 pub mod kbd;
 pub mod modal;
 pub mod progress_bar;
 pub mod radio;
 pub mod select;
+pub mod score_ring;
 pub mod sheet;
 pub mod sidebar;
 pub mod skeleton;
@@ -82,34 +84,36 @@ pub mod tooltip;
 
 /// Re-export all components at crate root for convenience.
 pub mod prelude {
-    pub use crate::accordion::*;
-    pub use crate::alert_banner::*;
-    pub use crate::avatar::*;
-    pub use crate::badge::*;
-    pub use crate::breadcrumb::*;
-    pub use crate::button::*;
-    pub use crate::card::*;
-    pub use crate::checkbox::*;
+ pub use crate::accordion::*;
+ pub use crate::alert_banner::*;
+ pub use crate::avatar::*;
+ pub use crate::badge::*;
+ pub use crate::breadcrumb::*;
+ pub use crate::button::*;
+ pub use crate::card::*;
+ pub use crate::checkbox::*;
  pub use crate::chip_select::*;
-    pub use crate::command::*;
-    pub use crate::divider::*;
-    pub use crate::dropdown::*;
-    pub use crate::empty_state::*;
-    pub use crate::input::*;
-    pub use crate::kbd::*;
-    pub use crate::modal::*;
-    pub use crate::progress_bar::*;
-    pub use crate::radio::*;
-    pub use crate::select::*;
-    pub use crate::sheet::*;
-    pub use crate::sidebar::*;
-    pub use crate::skeleton::*;
-    pub use crate::stats_card::*;
-    pub use crate::status_badge::*;
-    pub use crate::switch::*;
-    pub use crate::table::*;
-    pub use crate::tabs::*;
-    pub use crate::textarea::*;
-    pub use crate::toast::*;
-    pub use crate::tooltip::*;
+ pub use crate::command::*;
+ pub use crate::divider::*;
+ pub use crate::dropdown::*;
+ pub use crate::empty_state::*;
+ pub use crate::file_upload::*;
+ pub use crate::input::*;
+ pub use crate::kbd::*;
+ pub use crate::modal::*;
+ pub use crate::progress_bar::*;
+ pub use crate::radio::*;
+ pub use crate::select::*;
+ pub use crate::score_ring::*;
+ pub use crate::sheet::*;
+ pub use crate::sidebar::*;
+ pub use crate::skeleton::*;
+ pub use crate::stats_card::*;
+ pub use crate::status_badge::*;
+ pub use crate::switch::*;
+ pub use crate::table::*;
+ pub use crate::tabs::*;
+ pub use crate::textarea::*;
+ pub use crate::toast::*;
+ pub use crate::tooltip::*;
 }
