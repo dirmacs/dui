@@ -5,10 +5,11 @@ use leptos::prelude::*;
 /// Input field type.
 #[derive(Debug, Clone, Copy, Default, PartialEq)]
 pub enum InputType {
-    #[default]
-    Text,
-    Password,
-    Search,
+ #[default]
+ Text,
+ Password,
+ Search,
+ Email, // NEW — adds type="email" for browser email validation
 }
 
 impl InputType {
@@ -17,8 +18,10 @@ impl InputType {
             InputType::Text     => "text",
             InputType::Password => "password",
             InputType::Search   => "search",
+            InputType::Email    => "email",
         }
     }
+}
 }
 
 /// A styled text input with optional label and error message.
