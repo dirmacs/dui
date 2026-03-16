@@ -15,7 +15,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! DUI = "0.2"
+//! DUI = "0.3"
 //! ```
 //!
 //! ```rust,ignore

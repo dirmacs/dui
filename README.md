@@ -43,7 +43,7 @@ DUI fills the gap: **styled, accessible, and built for teams that ship.**
 
 ```toml
 [dependencies]
-dui-leptos = "0.2"
+dui-leptos = "0.3"
 ```
 
 > **Note**: The crate is published as `dui-leptos` on crates.io, but the Rust import is just `dui`. This is intentional — `use dui::prelude::*` is all you need.
