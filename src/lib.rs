@@ -50,6 +50,7 @@
 //! | **Layout** | Divider, Accordion, Kbd |
 
 pub mod accordion;
+pub mod ai_view;
 pub mod alert_banner;
 pub mod avatar;
 pub mod badge;
@@ -88,6 +89,7 @@ pub mod tooltip;
 /// Re-export all components at crate root for convenience.
 pub mod prelude {
     pub use crate::accordion::*;
+    pub use crate::ai_view::*;
     pub use crate::alert_banner::*;
     pub use crate::avatar::*;
     pub use crate::badge::*;
