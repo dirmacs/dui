@@ -1,6 +1,6 @@
 [package]
 name = "dui-leptos"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 description = "DUI — A production-ready Leptos 0.7 component library. 29 accessible, signal-driven components with a dark-first design system."
 license = "MIT"
