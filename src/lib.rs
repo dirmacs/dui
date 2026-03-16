@@ -73,6 +73,7 @@ pub mod score_ring;
 pub mod sheet;
 pub mod sidebar;
 pub mod skeleton;
+pub mod stepper;
 pub mod stats_card;
 pub mod status_badge;
 pub mod switch;
@@ -108,7 +109,8 @@ pub mod prelude {
  pub use crate::sheet::*;
  pub use crate::sidebar::*;
  pub use crate::skeleton::*;
- pub use crate::stats_card::*;
+    pub use crate::stepper::*;
+    pub use crate::stats_card::*;
  pub use crate::status_badge::*;
  pub use crate::switch::*;
  pub use crate::table::*;
