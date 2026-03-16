@@ -22,7 +22,6 @@ impl InputType {
         }
     }
 }
-}
 
 /// A styled text input with optional label and error message.
 ///
