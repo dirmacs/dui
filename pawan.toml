@@ -1,3 +1,8 @@
-model = "stepfun-ai/step-3.5-flash"
+model = "moonshotai/kimi-k2.5"
 temperature = 0.6
+
+[mcp.eruka]
+command = "/opt/eruka/target/release/eruka-mcp"
+args = ["--transport", "stdio", "--user-id", "REDACTED"]
+env = { DATABASE_URL = "postgres://dirmacs:REDACTED@localhost/eruka" }
 
