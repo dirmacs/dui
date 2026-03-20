@@ -12,6 +12,7 @@ pub enum CardGlow {
     Warning,  // Yellow
     Danger,   // Red
     Purple,   // Purple
+    Brutal,   // Brutalist style
 }
 
 /// A card container with header/body/footer slots and optional animated glow border.
@@ -37,22 +38,23 @@ pub fn Card(
 ) -> impl IntoView {
     let glow_classes = match glow {
         CardGlow::None    => "",
-        CardGlow::Accent  => "border-dm-accent/30 shadow-[0_0_16px_rgba(79,124,255,0.12)] hover:shadow-[0_0_24px_rgba(79,124,255,0.2)]",
-        CardGlow::Success => "border-green-400/30 shadow-[0_0_16px_rgba(52,211,153,0.12)] hover:shadow-[0_0_24px_rgba(52,211,153,0.2)]",
-        CardGlow::Warning => "border-yellow-400/30 shadow-[0_0_16px_rgba(251,191,36,0.12)] hover:shadow-[0_0_24px_rgba(251,191,36,0.2)]",
-        CardGlow::Danger  => "border-red-400/30 shadow-[0_0_16px_rgba(248,113,113,0.12)] hover:shadow-[0_0_24px_rgba(248,113,113,0.2)]",
-        CardGlow::Purple  => "border-purple-400/30 shadow-[0_0_16px_rgba(167,139,250,0.12)] hover:shadow-[0_0_24px_rgba(167,139,250,0.2)]",
+        CardGlow::Accent  => "border-[rgba(99,102,241,0.4)] shadow-[0_0_20px_rgba(99,102,241,0.15),0_0_40px_rgba(99,102,241,0.05)]",
+        CardGlow::Success => "border-[var(--dm-confirmed-border)] shadow-[var(--dm-confirmed-glow)]",
+        CardGlow::Warning => "border-[var(--dm-inferred-border)] shadow-[var(--dm-inferred-glow)]",
+        CardGlow::Danger  => "border-[var(--dm-unknown-border)] shadow-[var(--dm-unknown-glow)]",
+        CardGlow::Purple  => "border-[rgba(168,85,247,0.4)] shadow-[0_0_16px_rgba(168,85,247,0.15)]",
+        CardGlow::Brutal  => "border-2 border-[var(--dm-text)] shadow-[4px_4px_0_var(--dm-border)] hover:shadow-[6px_6px_0_var(--dm-accent)] hover:border-[var(--dm-accent)] hover:translate-x-[-2px] hover:translate-y-[-2px]",
     };
 
     view! {
         <div class=format!(
-            "bg-dm-panel border border-dm rounded-xl overflow-hidden \
-             transition-shadow duration-300 {} {}",
+            "bg-[var(--dm-surface)] border-2 border-[var(--dm-border)] rounded-lg overflow-hidden \
+             transition-all duration-300 {} {}",
             glow_classes, class
         )>
             // Header
             {header.map(|h| view! {
-                <div class="px-5 py-4 border-b border-dm flex items-center justify-between">
+                <div class="px-5 py-4 border-b-2 border-[var(--dm-border)] flex items-center justify-between">
                     {h()}
                 </div>
             })}
@@ -64,7 +66,7 @@ pub fn Card(
 
             // Footer
             {footer.map(|f| view! {
-                <div class="px-5 py-3 border-t border-dm bg-dm-bg/50">
+                <div class="px-5 py-3 border-t border-[var(--dm-border)] bg-[var(--dm-bg)]/50">
                     {f()}
                 </div>
             })}

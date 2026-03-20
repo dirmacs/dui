@@ -58,14 +58,14 @@ pub fn Input(
         <div class="flex flex-col gap-1.5 w-full">
             // Label
             {label.map(|l| view! {
-                <label class="text-sm font-medium text-dm-muted">{l}</label>
+                <label class="text-[11px] font-mono font-medium uppercase tracking-[0.05em] text-[var(--dm-text-muted)]">{l}</label>
             })}
 
             // Input wrapper (for search icon)
             <div class="relative">
                 {search_icon.then(|| view! {
                     <svg
-                        class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-dm-dim pointer-events-none"
+                        class="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--dm-text-dim)] pointer-events-none"
                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                         stroke-width="2" stroke="currentColor"
                     >
@@ -79,16 +79,9 @@ pub fn Input(
                     placeholder=placeholder
                     disabled=disabled
                     class=move || format!(
-                        "w-full bg-dm-panel text-dm-text text-sm \
-                         border rounded-lg px-3 py-2.5 \
-                         placeholder:text-dm-dim \
-                         transition-all duration-150 \
-                         focus:outline-none focus:border-dm-accent \
-                         focus:shadow-[0_0_0_3px_rgba(79,124,255,0.15)] \
-                         disabled:opacity-50 disabled:cursor-not-allowed \
-                         {} {} {}",
-                        if has_error() { "border-dm-danger focus:border-dm-danger focus:shadow-[0_0_0_3px_rgba(248,113,113,0.15)]" }
-                        else { "border-dm hover:border-dm-strong" },
+                        "w-full bg-[var(--dm-bg)] text-[var(--dm-text)] text-sm border-2 border-[var(--dm-border)] rounded-md px-3 py-2.5 placeholder:text-[var(--dm-text-dim)] transition-all duration-150 focus:outline-none focus:border-[var(--dm-border-focus)] focus:shadow-[var(--dm-ring)] disabled:opacity-40 disabled:cursor-not-allowed {} {} {}",
+                        if has_error() { "border-[var(--dm-unknown)] focus:border-[var(--dm-unknown)] focus:shadow-[0_0_0_2px_var(--dm-bg),0_0_0_4px_var(--dm-unknown)]" }
+                        else { "hover:border-[var(--dm-border-hover)]" },
                         if search_icon { "pl-10" } else { "" },
                         class,
                     )
@@ -101,7 +94,7 @@ pub fn Input(
 
             // Error message
             <Show when=has_error>
-                <p class="text-xs text-dm-danger flex items-center gap-1">
+                <p class="text-xs text-[var(--dm-unknown-text)] flex items-center gap-1">
                     <svg class="w-3.5 h-3.5 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none"
                          viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round"

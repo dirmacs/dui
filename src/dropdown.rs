@@ -202,12 +202,12 @@ pub fn Dropdown(
         .enumerate()
         .map(|(idx, entry)| match entry {
             DropdownEntry::Separator => view! {
-                <div class="h-px bg-dm-border my-1 mx-1" role="separator"></div>
+                <div class="h-0.5 bg-[var(--dm-border)] my-1 mx-1" role="separator"></div>
             }
             .into_any(),
             DropdownEntry::Label(text) => view! {
                 <div
-                    class="px-2 py-1 text-xs font-semibold text-dm-muted \
+                    class="px-2 py-1 text-xs font-semibold text-[var(--dm-text-secondary)] \
                            uppercase tracking-wider"
                     role="presentation"
                 >
@@ -225,7 +225,7 @@ pub fn Dropdown(
                 let base_class = if danger {
                     "text-red-400 hover:bg-red-500/10"
                 } else {
-                    "text-dm-text hover:bg-dm-hover"
+                    "text-[var(--dm-text)] hover:bg-[var(--dm-surface-hover)]"
                 };
 
                 let disabled_class = if disabled {
@@ -242,7 +242,7 @@ pub fn Dropdown(
                             base_class,
                             disabled_class,
                             if focused_index.get() == idx as i32 {
-                                "bg-dm-hover"
+                                "bg-[var(--dm-surface-hover)]"
                             } else {
                                 ""
                             }
@@ -297,7 +297,7 @@ pub fn Dropdown(
                     if open.get() {
                         format!(
                             "absolute top-full mt-1 {} z-50 \
-                             bg-dm-elevated border border-dm rounded-lg shadow-lg \
+                             bg-[var(--dm-elevated)] border border-[var(--dm-border)] rounded-lg shadow-lg \
                              p-1 min-w-[180px] animate-dm-fade-in",
                             align_class
                         )

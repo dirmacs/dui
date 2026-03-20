@@ -33,11 +33,11 @@ pub fn ProgressBar(
     let fill_color = move || {
         let v = clamped();
         if v >= 80.0 {
-            "bg-dm-success shadow-[0_0_8px_rgba(52,211,153,0.3)]"
+            "bg-[var(--dm-confirmed)]"
         } else if v >= 50.0 {
-            "bg-dm-accent-2 shadow-[0_0_8px_rgba(127,176,255,0.2)]"
+            "bg-[var(--dm-accent-muted)]"
         } else {
-            "bg-dm-accent shadow-[0_0_8px_rgba(79,124,255,0.2)]"
+            "bg-[var(--dm-accent)]"
         }
     };
 
@@ -47,10 +47,10 @@ pub fn ProgressBar(
             {(label.is_some() || show_percentage).then(|| view! {
                 <div class="flex items-center justify-between mb-1.5">
                     {label.clone().map(|l| view! {
-                        <span class="text-sm font-medium text-dm-muted">{l}</span>
+                        <span class="text-sm font-medium text-[var(--dm-text-secondary)]">{l}</span>
                     })}
                     {show_percentage.then(|| view! {
-                        <span class="text-xs font-mono text-dm-dim">
+                        <span class="text-xs font-mono text-[var(--dm-text-dim)]">
                             {move || format!("{:.0}%", clamped())}
                         </span>
                     })}
@@ -64,7 +64,7 @@ pub fn ProgressBar(
                 aria-valuemin="0"
                 aria-valuemax="100"
                 class=format!(
-                    "w-full bg-dm-elevated rounded-full overflow-hidden {}",
+                    "w-full bg-[var(--dm-bg)] border border-[var(--dm-border)] rounded-full overflow-hidden {}",
                     height
                 )
             >

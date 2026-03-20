@@ -57,7 +57,7 @@ pub fn ChipSelect(
  view! {
   <div class=format!("flex flex-col gap-2 {}", class)>
    {label.map(|l| view! {
-    <label class="text-sm font-medium" style="color: var(--dm-text);">
+    <label class="font-mono text-[11px] font-medium uppercase tracking-[0.05em]" style="color: var(--dm-text);">
      {l}
     </label>
    })}
@@ -88,11 +88,11 @@ pub fn ChipSelect(
        class=move || {
         let is_selected = selected.get().contains(&opt_for_check);
         format!(
-         "px-3 py-1.5 rounded-full text-sm font-medium min-h-[44px] min-w-[44px] transition-all duration-150 cursor-pointer border-2 select-none focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed {}",
+         "px-3 py-1.5 rounded-md text-sm font-medium min-h-[44px] min-w-[44px] transition-all duration-150 cursor-pointer border-2 select-none focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed {}",
          if is_selected {
           "border-[var(--dm-accent)] bg-[var(--dm-accent)]/10 text-[var(--dm-accent)]"
          } else {
-          "border-[var(--dm-border)] bg-[var(--dm-surface)] text-[var(--dm-text-muted)] hover:border-[var(--dm-accent)]/50 hover:text-[var(--dm-text)]"
+          "border-[var(--dm-border)] bg-[var(--dm-surface)] text-[var(--dm-text-secondary)] hover:border-[var(--dm-accent)]/50 hover:text-[var(--dm-text)]"
          }
         )
        }

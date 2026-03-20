@@ -29,12 +29,12 @@ pub fn Badge(
     children: Children,
 ) -> impl IntoView {
     let color_classes = match color {
-        BadgeColor::Gray   => "bg-dm-elevated text-dm-muted border-dm-strong",
-        BadgeColor::Blue   => "bg-blue-500/10 text-blue-400 border-blue-400/20",
-        BadgeColor::Green  => "bg-emerald-500/10 text-emerald-400 border-emerald-400/20",
-        BadgeColor::Yellow => "bg-yellow-500/10 text-yellow-400 border-yellow-400/20",
-        BadgeColor::Red    => "bg-red-500/10 text-red-400 border-red-400/20",
-        BadgeColor::Purple => "bg-purple-500/10 text-purple-400 border-purple-400/20",
+        BadgeColor::Gray   => "bg-[var(--dm-surface)] text-[var(--dm-text-secondary)] border-2 border-[var(--dm-border)]",
+        BadgeColor::Blue   => "bg-[var(--dm-accent-muted)] text-[var(--dm-accent)] border-2 border-[var(--dm-accent-border)]",
+        BadgeColor::Green  => "bg-[var(--dm-confirmed-muted)] text-[var(--dm-confirmed-text)] border-2 border-[var(--dm-confirmed-border)]",
+        BadgeColor::Yellow => "bg-[var(--dm-inferred-muted)] text-[var(--dm-inferred-text)] border-2 border-[var(--dm-inferred-border)]",
+        BadgeColor::Red    => "bg-[var(--dm-unknown-muted)] text-[var(--dm-unknown-text)] border-2 border-[var(--dm-unknown-border)]",
+        BadgeColor::Purple => "bg-[var(--dm-purple-muted)] text-[var(--dm-purple)] border-2 border-[var(--dm-purple-border)]",
     };
 
     view! {

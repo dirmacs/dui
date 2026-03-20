@@ -54,39 +54,33 @@ pub fn Button(
 
     let variant_classes = match variant {
         ButtonVariant::Primary => {
-            "bg-dm-accent hover:bg-dm-interactive text-white \
-             shadow-[0_0_12px_rgba(79,124,255,0.25)] hover:shadow-[0_0_20px_rgba(79,124,255,0.4)] \
-             border border-dm-accent/30"
+            "bg-[var(--dm-accent)] hover:bg-[var(--dm-accent-hover)] active:bg-[var(--dm-accent-active)] text-white border-2 border-[var(--dm-accent)] hover:border-[var(--dm-accent-hover)] shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] hover:shadow-[var(--dm-shadow-sm)] hover:-translate-y-px active:translate-y-0 active:shadow-none"
         }
         ButtonVariant::Secondary => {
-            "bg-dm-elevated hover:bg-dm-hover text-dm-text \
-             border border-dm/strong hover:border-dm-muted"
+            "bg-transparent hover:bg-[var(--dm-surface)] text-[var(--dm-text)] border-2 border-[var(--dm-border)] hover:border-[var(--dm-border-hover)]"
         }
         ButtonVariant::Ghost => {
-            "bg-transparent hover:bg-dm-hover text-dm-muted hover:text-dm-text \
-             border border-transparent"
+            "bg-transparent hover:bg-[var(--dm-surface)] text-[var(--dm-text-secondary)] border-2 border-transparent hover:border-[var(--dm-border)]"
         }
         ButtonVariant::Danger => {
-            "bg-dm-danger/10 hover:bg-dm-danger/20 text-dm-danger \
-             border border-dm-danger/30 hover:border-dm-danger/50"
+            "bg-[var(--dm-unknown-muted)] hover:bg-[var(--dm-unknown)] text-[var(--dm-unknown-text)] hover:text-white border-2 border-[var(--dm-unknown-border)] hover:border-[var(--dm-unknown)]"
         }
     };
 
     let size_classes = match size {
         ButtonSize::Sm => "px-3 py-1.5 text-xs rounded-md gap-1.5",
-        ButtonSize::Md => "px-4 py-2 text-sm rounded-lg gap-2",
-        ButtonSize::Lg => "px-6 py-3 text-base rounded-lg gap-2.5",
+        ButtonSize::Md => "px-[22px] py-2.5 text-[13px] rounded-md gap-2",
+        ButtonSize::Lg => "px-7 py-3 text-sm rounded-md gap-2.5",
     };
 
     view! {
         <button
             class=move || format!(
-                "inline-flex items-center justify-center font-medium \
-                 transition-all duration-150 ease-out cursor-pointer \
-                 dm-focus-ring select-none {} {} {} {}",
+                "inline-flex items-center justify-center font-mono font-medium uppercase tracking-[0.04em] \
+                 transition-all duration-150 ease-out cursor-pointer dm-focus-ring select-none {} {} {} {}",
                 variant_classes,
                 size_classes,
-                if is_disabled() { "opacity-50 cursor-not-allowed pointer-events-none" } else { "" },
+                if is_disabled() { "opacity-40 cursor-not-allowed pointer-events-none" } else { "" },
                 class,
             )
             disabled=is_disabled

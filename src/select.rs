@@ -33,16 +33,16 @@ pub fn Select(
     view! {
         <div class="flex flex-col gap-1.5 w-full">
             {label.map(|l| view! {
-                <label class="text-sm font-medium text-dm-muted">{l}</label>
+                <label class="font-mono text-[11px] font-medium uppercase tracking-[0.05em] text-[var(--dm-text-secondary)]">{l}</label>
             })}
 
             <div class="relative">
                 <select
                     class=format!(
-                        "w-full bg-dm-panel text-dm-text text-sm appearance-none \
-                         border border-dm hover:border-dm-strong rounded-lg px-3 py-2.5 pr-10 \
+                        "w-full bg-[var(--dm-surface)] text-[var(--dm-text)] text-sm appearance-none \
+                         border-2 border-[var(--dm-border)] hover:border-[var(--dm-border-hover)] rounded-md px-3 py-2.5 pr-10 \
                          transition-all duration-150 \
-                         focus:outline-none focus:border-dm-accent \
+                         focus:outline-none focus:border-[var(--dm-accent)] \
                          focus:shadow-[0_0_0_3px_rgba(79,124,255,0.15)] \
                          disabled:opacity-50 disabled:cursor-not-allowed \
                          cursor-pointer {}",
@@ -73,7 +73,7 @@ pub fn Select(
 
                 // Chevron icon
                 <svg
-                    class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-dm-dim pointer-events-none"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--dm-text-secondary)] pointer-events-none"
                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                     stroke-width="2" stroke="currentColor"
                 >

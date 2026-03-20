@@ -29,27 +29,27 @@ pub fn AlertBanner(
 ) -> impl IntoView {
     let (bg, border, text, icon_path) = match level {
         AlertLevel::Info => (
-            "bg-dm-info/10",
-            "border-dm-info/20",
-            "text-dm-info",
+            "bg-[var(--dm-accent-muted)]",
+            "border-[var(--dm-accent-border)]",
+            "text-[var(--dm-accent)]",
             "m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z",
         ),
         AlertLevel::Success => (
-            "bg-dm-success/10",
-            "border-dm-success/20",
-            "text-dm-success",
+            "bg-[var(--dm-confirmed-muted)]",
+            "border-[var(--dm-confirmed-border)]",
+            "text-[var(--dm-confirmed-text)]",
             "M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z",
         ),
         AlertLevel::Warning => (
-            "bg-dm-warning/10",
-            "border-dm-warning/20",
-            "text-dm-warning",
+            "bg-[var(--dm-inferred-muted)]",
+            "border-[var(--dm-inferred-border)]",
+            "text-[var(--dm-inferred-text)]",
             "M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z",
         ),
         AlertLevel::Error => (
-            "bg-dm-danger/10",
-            "border-dm-danger/20",
-            "text-dm-danger",
+            "bg-[var(--dm-unknown-muted)]",
+            "border-[var(--dm-unknown-border)]",
+            "text-[var(--dm-unknown-text)]",
             "M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z",
         ),
     };
@@ -59,7 +59,7 @@ pub fn AlertBanner(
             <div
                 role="alert"
                 class=format!(
-                    "flex items-center gap-3 px-4 py-3 rounded-lg border \
+                    "flex items-center gap-3 px-4 py-3 rounded-lg border-2 border-l-4 \
                      animate-dm-fade-in-up {} {}",
                     bg, border
                 )

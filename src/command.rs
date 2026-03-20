@@ -38,7 +38,7 @@ pub struct CommandItem {
 /// Inline keycap styling string, matching `kbd.rs`.
 const KBD_CLASS: &str = "inline-flex items-center justify-center \
     min-w-[20px] h-5 px-1.5 text-[11px] font-mono font-medium leading-none \
-    rounded border bg-dm-elevated text-dm-muted border-dm \
+    rounded border bg-[var(--dm-elevated)] text-[var(--dm-text-secondary)] border-[var(--dm-border)] \
     shadow-[0_1px_0_1px_var(--dm-bg)] select-none";
 
 // ---------------------------------------------------------------------------
@@ -215,15 +215,15 @@ pub fn CommandPalette(
             }
         >
             // Panel
-            <div class="bg-dm-panel border border-dm rounded-xl shadow-2xl \
+            <div class="bg-[var(--dm-surface)] border border-[var(--dm-border)] rounded-xl shadow-2xl \
                         w-full max-w-lg mx-4 flex flex-col overflow-hidden \
                         animate-dm-scale-in">
 
                 // ---- Search input section ----
-                <div class="flex items-center gap-3 px-4 py-3 border-b border-dm">
+                <div class="flex items-center gap-3 px-4 py-3 border-b border-[var(--dm-border)]">
                     // Magnifying glass icon
                     <svg
-                        class="w-5 h-5 text-dm-muted shrink-0"
+                        class="w-5 h-5 text-[var(--dm-text-secondary)] shrink-0"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         viewBox="0 0 24 24"
@@ -248,8 +248,8 @@ pub fn CommandPalette(
                         aria-controls=listbox_id
                         aria-autocomplete="list"
                         aria-activedescendant=move || format!("dm-cmd-opt-{}", active_index.get())
-                        class="flex-1 bg-transparent text-dm-text text-base \
-                               placeholder:text-dm-dim outline-none"
+                        class="flex-1 bg-transparent text-[var(--dm-text)] text-base \
+                               placeholder:text-[var(--dm-text-dim)] outline-none"
                         prop:value=move || query.get()
                         on:input=move |ev| {
                             query.set(event_target_value(&ev));
@@ -303,7 +303,7 @@ pub fn CommandPalette(
 
                         if list.is_empty() {
                             return view! {
-                                <div class="px-4 py-8 text-center text-sm text-dm-muted select-none">
+                                <div class="px-4 py-8 text-center text-sm text-[var(--dm-text-secondary)] select-none">
                                     "No results found."
                                 </div>
                             }.into_any();
@@ -341,7 +341,7 @@ pub fn CommandPalette(
                                                 view! {
                                                     <div
                                                         id=gid
-                                                        class="text-xs font-semibold text-dm-muted \
+                                                        class="text-xs font-semibold text-[var(--dm-text-secondary)] \
                                                                uppercase tracking-wider px-2 py-1.5 \
                                                                select-none"
                                                     >
@@ -367,7 +367,7 @@ pub fn CommandPalette(
                                                             "px-2 py-2 flex items-center gap-3 rounded-md \
                                                              cursor-pointer text-sm transition-colors duration-75 {}",
                                                             if active_index.get() == idx {
-                                                                "bg-dm-hover"
+                                                                "bg-[var(--dm-surface-hover)]"
                                                             } else {
                                                                 ""
                                                             }
@@ -388,7 +388,7 @@ pub fn CommandPalette(
                                                             let d = path_d.clone();
                                                             view! {
                                                                 <svg
-                                                                    class="w-5 h-5 text-dm-muted shrink-0"
+                                                                    class="w-5 h-5 text-[var(--dm-text-secondary)] shrink-0"
                                                                     xmlns="http://www.w3.org/2000/svg"
                                                                     fill="none"
                                                                     viewBox="0 0 20 20"
@@ -406,13 +406,13 @@ pub fn CommandPalette(
 
                                                         // Label + description
                                                         <div class="flex-1 min-w-0">
-                                                            <div class="text-dm-text truncate">
+                                                            <div class="text-[var(--dm-text)] truncate">
                                                                 {item.label.clone()}
                                                             </div>
                                                             {item.description.as_ref().map(|desc| {
                                                                 let d = desc.clone();
                                                                 view! {
-                                                                    <div class="text-xs text-dm-dim truncate mt-0.5">
+                                                                    <div class="text-xs text-[var(--dm-text-dim)] truncate mt-0.5">
                                                                         {d}
                                                                     </div>
                                                                 }
@@ -447,8 +447,8 @@ pub fn CommandPalette(
                 </div>
 
                 // ---- Footer: keyboard hints ----
-                <div class="flex items-center gap-4 px-4 py-2.5 border-t border-dm \
-                            text-xs text-dm-dim select-none">
+                <div class="flex items-center gap-4 px-4 py-2.5 border-t border-[var(--dm-border)] \
+                            text-xs text-[var(--dm-text-dim)] select-none">
                     <span class="inline-flex items-center gap-1">
                         <kbd class=KBD_CLASS>{"\u{2191}\u{2193}"}</kbd>
                         " Navigate"

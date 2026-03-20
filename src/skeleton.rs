@@ -50,7 +50,7 @@ pub fn SkeletonText(
 #[component]
 pub fn SkeletonCard() -> impl IntoView {
     view! {
-        <div class="bg-dm-panel border border-dm rounded-xl overflow-hidden">
+        <div class="bg-[var(--dm-surface)] border border-[var(--dm-border)] rounded-xl overflow-hidden">
             <div class="dm-skeleton h-40 w-full rounded-none"></div>
             <div class="p-4 space-y-3">
                 <div class="dm-skeleton h-5 w-2/3"></div>

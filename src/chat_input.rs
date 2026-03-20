@@ -30,7 +30,7 @@ pub fn ChatInput(
                 rows="1"
                 placeholder=placeholder
                 disabled=move || loading.get()
-                class="flex-1 resize-none rounded-lg px-3 py-2 text-sm bg-[var(--dm-surface)] text-[var(--dm-text)] border border-[var(--dm-border)] focus:outline-none focus:ring-2 focus:ring-[var(--dm-accent)] disabled:opacity-50"
+                class="flex-1 resize-none rounded-md px-3 py-2 text-sm bg-[var(--dm-surface)] text-[var(--dm-text)] border-2 border-[var(--dm-border)] focus:outline-none focus:ring-2 focus:ring-[var(--dm-accent)] disabled:opacity-50"
                 prop:value=move || value.get()
                 on:input=move |ev| {
                     let target = ev.target().unwrap();

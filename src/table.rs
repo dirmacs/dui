@@ -51,10 +51,10 @@ pub fn Table(
     let on_sort = std::rc::Rc::new(on_sort);
 
     view! {
-        <div class=format!("w-full overflow-x-auto rounded-lg border border-dm {}", class)>
+        <div class=format!("w-full overflow-x-auto rounded-lg border border-[var(--dm-border)] {}", class)>
             <table class="w-full text-sm text-left">
                 // Header
-                <thead class="bg-dm-elevated">
+                <thead class="bg-[var(--dm-elevated)]">
                     <tr>
                         {columns.iter().map(|col| {
                             let key = col.key.clone();
@@ -66,9 +66,9 @@ pub fn Table(
                                 <th
                                     class=move || format!(
                                         "px-4 py-3 text-xs font-semibold uppercase tracking-wider \
-                                         text-dm-muted border-b border-dm {} {}",
+                                         text-[var(--dm-text-secondary)] border-b border-[var(--dm-border)] {} {}",
                                         width,
-                                        if sortable { "cursor-pointer select-none hover:text-dm-text transition-colors" } else { "" },
+                                        if sortable { "cursor-pointer select-none hover:text-[var(--dm-text)] transition-colors" } else { "" },
                                     )
                                     on:click={
                                         let key = key.clone();
@@ -101,9 +101,9 @@ pub fn Table(
                                             view! {
                                                 <span class=move || {
                                                     if sort_key.get() == key2_for_compare {
-                                                        "text-dm-accent"
+                                                        "text-[var(--dm-accent)]"
                                                     } else {
-                                                        "text-dm-dim"
+                                                        "text-[var(--dm-text-dim)]"
                                                     }
                                                 }>
                                                     {move || {
@@ -133,13 +133,13 @@ pub fn Table(
                     {move || rows.get().into_iter().enumerate().map(|(row_idx, cells)| {
                         view! {
                             <tr class=format!(
-                                "border-b border-dm last:border-0 \
-                                 hover:bg-dm-hover/50 transition-colors duration-100 {}",
-                                if row_idx % 2 == 1 { "bg-dm-bg/30" } else { "" }
+                                "border-b border-[var(--dm-border)] last:border-0 \
+                                 hover:bg-[var(--dm-surface-hover)]/50 transition-colors duration-100 {}",
+                                if row_idx % 2 == 1 { "bg-[var(--dm-bg)]/30" } else { "" }
                             )>
                                 {cells.into_iter().map(|cell| {
                                     view! {
-                                        <td class="px-4 py-3 text-dm-text">{cell}</td>
+                                        <td class="px-4 py-3 text-[var(--dm-text)]">{cell}</td>
                                     }
                                 }).collect::<Vec<_>>()}
                             </tr>

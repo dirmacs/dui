@@ -56,7 +56,7 @@ pub fn Textarea(
         <div class="flex flex-col gap-1.5 w-full">
             // Label
             {label.map(|l| view! {
-                <label class="text-sm font-medium text-dm-muted">{l}</label>
+                <label class="font-mono text-[11px] font-medium uppercase tracking-[0.05em] text-[var(--dm-text-secondary)]">{l}</label>
             })}
 
             // Textarea
@@ -68,18 +68,18 @@ pub fn Textarea(
                     aria-invalid=move || if has_error() { "true" } else { "false" }
                     aria-describedby=move || if has_error() { error_id } else { "" }
                     class=move || format!(
-                        "w-full bg-dm-panel text-dm-text text-sm \
-                         border rounded-lg px-3 py-2.5 \
-                         placeholder:text-dm-dim \
+                        "w-full bg-[var(--dm-surface)] text-[var(--dm-text)] text-sm \
+                         border-2 border-[var(--dm-border)] rounded-md px-3 py-2.5 \
+                         placeholder:text-[var(--dm-text-dim)] \
                          transition-all duration-150 \
-                         focus:outline-none focus:border-dm-accent \
+                         focus:outline-none focus:border-[var(--dm-accent)] \
                          focus:shadow-[0_0_0_3px_rgba(79,124,255,0.15)] \
                          disabled:opacity-50 disabled:cursor-not-allowed \
                          {} {} {}",
                         if has_error() {
-                            "border-dm-danger focus:border-dm-danger focus:shadow-[0_0_0_3px_rgba(248,113,113,0.15)]"
+                            "border-[var(--dm-unknown)] focus:border-[var(--dm-unknown)] focus:shadow-[0_0_0_3px_rgba(248,113,113,0.15)]"
                         } else {
-                            "border-dm hover:border-dm-strong"
+                            "border-[var(--dm-border)] hover:border-[var(--dm-border-hover)]"
                         },
                         resize_class,
                         class,
@@ -98,7 +98,7 @@ pub fn Textarea(
 
                 // Character count
                 {max_length.map(|max| view! {
-                    <span class="absolute bottom-2 right-3 text-xs text-dm-dim pointer-events-none select-none">
+                    <span class="absolute bottom-2 right-3 text-xs text-[var(--dm-text-dim)] pointer-events-none select-none">
                         {move || format!("{}/{}", value.get().len(), max)}
                     </span>
                 })}
@@ -108,7 +108,7 @@ pub fn Textarea(
             <Show when=has_error>
                 <p
                     id=error_id
-                    class="text-xs text-dm-danger flex items-center gap-1"
+                    class="text-xs text-[var(--dm-unknown-text)] flex items-center gap-1"
                 >
                     <svg class="w-3.5 h-3.5 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none"
                          viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">

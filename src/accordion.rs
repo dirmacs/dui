@@ -9,7 +9,7 @@ use leptos::prelude::*;
 ///
 /// ```rust
 /// view! {
-///     <div class="border border-dm rounded-xl overflow-hidden divide-y divide-dm">
+///     <div class="border border-[var(--dm-border)] rounded-xl overflow-hidden divide-y divide-dm">
 ///         <AccordionItem title="Section One">
 ///             <p>"Content for section one."</p>
 ///         </AccordionItem>
@@ -45,7 +45,7 @@ pub fn AccordionItem(
             // Header — acts as a toggle button
             <button
                 class="w-full px-4 py-3 flex items-center justify-between cursor-pointer \
-                       hover:bg-dm-hover text-dm-text transition-colors text-left"
+                       hover:bg-[var(--dm-surface-hover)] text-[var(--dm-text)] transition-colors text-left"
                 on:click=move |_| open.update(|v| *v = !*v)
                 aria-expanded=move || if open.get() { "true" } else { "false" }
                 aria-controls=section_id.clone()
@@ -55,7 +55,7 @@ pub fn AccordionItem(
                 // Chevron icon — rotates 180° when open
                 <svg
                     class=move || format!(
-                        "w-4 h-4 text-dm-dim transition-transform duration-200 shrink-0 {}",
+                        "w-4 h-4 text-[var(--dm-text-dim)] transition-transform duration-200 shrink-0 {}",
                         if open.get() { "rotate-180" } else { "" }
                     )
                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -78,7 +78,7 @@ pub fn AccordionItem(
                     }
                 }
             >
-                <div class="px-4 pb-4 pt-1 text-sm text-dm-muted">
+                <div class="px-4 pb-4 pt-1 text-sm text-[var(--dm-text-secondary)]">
                     {body}
                 </div>
             </div>

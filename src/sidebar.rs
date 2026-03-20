@@ -51,25 +51,25 @@ pub fn Sidebar(
 
     view! {
         <aside class=move || format!(
-            "h-screen bg-dm-panel border-r border-dm flex flex-col \
+            "h-screen bg-[var(--dm-surface)] border-r border-[var(--dm-border)] flex flex-col \
              transition-all duration-300 ease-out shrink-0 {}",
             if collapsed.get() { "w-16" } else { "w-64" }
         )>
             // Brand header
-            <div class="flex items-center gap-3 px-4 h-14 border-b border-dm shrink-0">
+            <div class="flex items-center gap-3 px-4 h-14 border-b border-[var(--dm-border)] shrink-0">
                 // Logo mark
-                <div class="w-8 h-8 rounded-lg bg-dm-accent/20 flex items-center justify-center \
-                            text-dm-accent font-bold text-sm shrink-0">
+                <div class="w-8 h-8 rounded-lg bg-[var(--dm-accent)]/20 flex items-center justify-center \
+                            text-[var(--dm-accent)] font-bold text-sm shrink-0">
                     "D"
                 </div>
                 <Show when=move || !collapsed.get()>
-                    <span class="text-dm-text font-semibold text-sm truncate">{brand}</span>
+                    <span class="text-[var(--dm-text)] font-semibold text-sm truncate">{brand}</span>
                 </Show>
 
                 // Collapse toggle
                 <button
-                    class="ml-auto p-1.5 rounded-md text-dm-dim hover:text-dm-text \
-                           hover:bg-dm-hover transition-colors duration-150"
+                    class="ml-auto p-1.5 rounded-md text-[var(--dm-text-dim)] hover:text-[var(--dm-text)] \
+                           hover:bg-[var(--dm-surface-hover)] transition-colors duration-150"
                     on:click=move |_| collapsed.update(|c| *c = !*c)
                 >
                     <svg class=move || format!(
@@ -99,9 +99,9 @@ pub fn Sidebar(
                                     if collapsed.get() { "px-3 py-2.5 justify-center" }
                                     else { "px-3 py-2.5" },
                                     if is_active {
-                                        "bg-dm-accent/10 text-dm-accent"
+                                        "bg-[var(--dm-accent)]/10 text-[var(--dm-accent)]"
                                     } else {
-                                        "text-dm-muted hover:text-dm-text hover:bg-dm-hover"
+                                        "text-[var(--dm-text-secondary)] hover:text-[var(--dm-text)] hover:bg-[var(--dm-surface-hover)]"
                                     }
                                 )
                             }
@@ -120,7 +120,7 @@ pub fn Sidebar(
                                 move || active.get() == key
                             }>
                                 <span class="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 \
-                                             bg-dm-accent rounded-r-full"></span>
+                                             bg-[var(--dm-accent)] rounded-r-full"></span>
                             </Show>
 
                             // Icon
@@ -149,15 +149,15 @@ pub fn Sidebar(
                 let avatar_url = u.avatar_url.clone();
 
                 view! {
-                    <div class="border-t border-dm px-3 py-3 shrink-0">
+                    <div class="border-t border-[var(--dm-border)] px-3 py-3 shrink-0">
                         <div class=move || format!(
                             "flex items-center gap-3 rounded-lg p-2 \
-                             hover:bg-dm-hover transition-colors duration-150 cursor-pointer {}",
+                             hover:bg-[var(--dm-surface-hover)] transition-colors duration-150 cursor-pointer {}",
                             if collapsed.get() { "justify-center" } else { "" }
                         )>
                             // Avatar
-                            <div class="w-8 h-8 rounded-full bg-dm-accent/20 flex items-center justify-center \
-                                        text-dm-accent text-xs font-semibold shrink-0 overflow-hidden">
+                            <div class="w-8 h-8 rounded-full bg-[var(--dm-accent)]/20 flex items-center justify-center \
+                                        text-[var(--dm-accent)] text-xs font-semibold shrink-0 overflow-hidden">
                                 {if has_avatar {
                                     view! { <img src=avatar_url.clone() class="w-full h-full object-cover" /> }.into_any()
                                 } else {
@@ -167,8 +167,8 @@ pub fn Sidebar(
 
                             <Show when=move || !collapsed.get()>
                                 <div class="flex-1 min-w-0">
-                                    <div class="text-sm font-medium text-dm-text truncate">{u.name.clone()}</div>
-                                    <div class="text-xs text-dm-dim truncate">{u.email.clone()}</div>
+                                    <div class="text-sm font-medium text-[var(--dm-text)] truncate">{u.name.clone()}</div>
+                                    <div class="text-xs text-[var(--dm-text-dim)] truncate">{u.email.clone()}</div>
                                 </div>
                             </Show>
                         </div>

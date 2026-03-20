@@ -125,7 +125,7 @@ pub fn Sheet(
             // Panel
             <div
                 class=format!(
-                    "fixed {} {} {} {} bg-dm-panel border-dm shadow-2xl \
+                    "fixed {} {} {} {} bg-[var(--dm-surface)] border-[var(--dm-border)] shadow-2xl \
                      flex flex-col transition-transform duration-300 ease-out",
                     panel_position, panel_dimension, size_class, panel_border
                 )
@@ -138,15 +138,15 @@ pub fn Sheet(
                 }
             >
                 // Header
-                <div class="flex items-center justify-between px-5 py-4 border-b border-dm shrink-0">
+                <div class="flex items-center justify-between px-5 py-4 border-b border-[var(--dm-border)] shrink-0">
                     {has_title.then(|| view! {
-                        <h2 class="text-lg font-semibold text-dm-text">{title}</h2>
+                        <h2 class="text-lg font-semibold text-[var(--dm-text)]">{title}</h2>
                     })}
                     {(!has_title).then(|| view! { <div></div> })}
                     <button
                         on:click=move |_| open.set(false)
-                        class="p-1 rounded-md text-dm-muted hover:text-dm-text \
-                               hover:bg-dm-hover transition-colors"
+                        class="p-1 rounded-md text-[var(--dm-text-secondary)] hover:text-[var(--dm-text)] \
+                               hover:bg-[var(--dm-surface-hover)] transition-colors"
                         aria-label="Close panel"
                     >
                         <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none"

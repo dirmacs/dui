@@ -32,22 +32,22 @@ pub fn Tooltip(
         TooltipPosition::Top => (
             "bottom-full left-1/2 -translate-x-1/2 mb-2",
             "top-full left-1/2 -translate-x-1/2 border-l-4 border-r-4 border-t-4 \
-             border-l-transparent border-r-transparent border-t-dm-elevated",
+             border-l-transparent border-r-transparent border-t-[var(--dm-border)]",
         ),
         TooltipPosition::Bottom => (
             "top-full left-1/2 -translate-x-1/2 mt-2",
             "bottom-full left-1/2 -translate-x-1/2 border-l-4 border-r-4 border-b-4 \
-             border-l-transparent border-r-transparent border-b-dm-elevated",
+             border-l-transparent border-r-transparent border-b-[var(--dm-border)]",
         ),
         TooltipPosition::Left => (
             "right-full top-1/2 -translate-y-1/2 mr-2",
             "left-full top-1/2 -translate-y-1/2 border-t-4 border-b-4 border-l-4 \
-             border-t-transparent border-b-transparent border-l-dm-elevated",
+             border-t-transparent border-b-transparent border-l-[var(--dm-border)]",
         ),
         TooltipPosition::Right => (
             "left-full top-1/2 -translate-y-1/2 ml-2",
             "right-full top-1/2 -translate-y-1/2 border-t-4 border-b-4 border-r-4 \
-             border-t-transparent border-b-transparent border-r-dm-elevated",
+             border-t-transparent border-b-transparent border-r-[var(--dm-border)]",
         ),
     };
 
@@ -63,8 +63,8 @@ pub fn Tooltip(
                 <div
                     role="tooltip"
                     class=format!(
-                        "absolute {} px-2.5 py-1.5 text-xs font-medium text-dm-text \
-                         bg-dm-elevated border border-dm rounded-md shadow-lg \
+                        "absolute {} px-2.5 py-1.5 text-xs font-mono font-medium text-[var(--dm-text)] \
+                         bg-[var(--dm-surface)] border-2 border-[var(--dm-border)] rounded-md shadow-[var(--dm-shadow-lg)] \
                          whitespace-nowrap pointer-events-none animate-dm-fade-in",
                         tooltip_pos
                     )

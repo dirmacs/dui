@@ -62,9 +62,9 @@ pub fn Checkbox(
                      dm-focus-ring cursor-pointer \
                      {} {}",
                     if checked.get() {
-                        "bg-dm-accent border-dm-accent"
+                        "bg-[var(--dm-accent)] border-[var(--dm-accent)]"
                     } else {
-                        "bg-dm-panel border-dm hover:border-dm-strong"
+                        "bg-[var(--dm-surface)] border-[var(--dm-border)] hover:border-[var(--dm-border-hover)]"
                     },
                     if disabled.get() { "opacity-50 cursor-not-allowed" } else { "" },
                 )
@@ -101,7 +101,7 @@ pub fn Checkbox(
                         <span
                             id=label_id_clone.clone()
                             class=move || format!(
-                                "text-sm text-dm-text leading-tight {}",
+                                "text-sm text-[var(--dm-text)] leading-tight {}",
                                 if disabled.get() { "opacity-50" } else { "cursor-pointer" },
                             )
                         >
@@ -111,7 +111,7 @@ pub fn Checkbox(
                     {description.map(|d| view! {
                         <span
                             class=move || format!(
-                                "text-xs text-dm-dim leading-snug {}",
+                                "text-xs text-[var(--dm-text-secondary)] leading-snug {}",
                                 if disabled.get() { "opacity-50" } else { "cursor-pointer" },
                             )
                         >

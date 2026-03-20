@@ -29,11 +29,11 @@ pub fn ChatMessage(
             class
         )>
             <div class=format!(
-                "max-w-[80%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed {}",
+                "max-w-[80%] px-4 py-2.5 rounded-lg text-sm leading-relaxed {}",
                 if is_user {
-                    "bg-[var(--dm-accent)] text-white rounded-br-sm"
+                    "border-2 border-[var(--dm-accent)] bg-[var(--dm-accent-muted)] text-[var(--dm-text)] rounded-br-sm"
                 } else {
-                    "bg-[var(--dm-surface)] text-[var(--dm-text)] rounded-bl-sm border border-[var(--dm-border)]"
+                    "border-2 border-[var(--dm-border)] border-l-4 border-l-[var(--dm-accent)] bg-[var(--dm-surface)] text-[var(--dm-text)] rounded-bl-sm"
                 }
             )>
                 {content}

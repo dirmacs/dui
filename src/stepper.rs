@@ -26,13 +26,13 @@ pub fn Stepper(
                                 <div
                                     class=move || {
                                         let cur = current.get();
-                                        format!("flex items-center justify-center w-8 h-8 rounded-full border-2 text-xs font-bold transition-colors {}",
+                                        format!("flex items-center justify-center w-8 h-8 rounded-md border-2 text-xs font-bold transition-colors {}",
                                             if i < cur || step.complete {
-                                                "border-[var(--dm-success)] bg-[var(--dm-success)] text-white"
+                                                "border-[var(--dm-confirmed)] bg-[var(--dm-confirmed)] text-white"
                                             } else if i == cur {
                                                 "border-[var(--dm-accent)] bg-[var(--dm-accent)]/10 text-[var(--dm-accent)]"
                                             } else {
-                                                "border-[var(--dm-border)] text-[var(--dm-text-muted)]"
+                                                "border-[var(--dm-border)] text-[var(--dm-text-secondary)]"
                                             })
                                     }
                                     aria-current=move || if i == current.get() { "step" } else { "" }
@@ -40,14 +40,14 @@ pub fn Stepper(
                                     {move || if i < current.get() || step.complete { "✓".to_string() } else { format!("{}", i + 1) }}
                                 </div>
                                 <span class=move || format!("text-xs font-medium whitespace-nowrap {}",
-                                    if i == current.get() { "text-[var(--dm-accent)]" } else { "text-[var(--dm-text-muted)]" })>
+                                    if i == current.get() { "text-[var(--dm-accent)]" } else { "text-[var(--dm-text-secondary)]" })>
                                     {label.clone()}
                                 </span>
                             </div>
                             {if !is_last {
                                 Some(view! {
                                     <div class=move || format!("flex-1 h-0.5 mx-2 transition-colors {}",
-                                        if i < current.get() { "bg-[var(--dm-success)]" } else { "bg-[var(--dm-border)]" }) />
+                                        if i < current.get() { "bg-[var(--dm-confirmed)]" } else { "bg-[var(--dm-border)]" }) />
                                 })
                             } else { None }}
                         </li>

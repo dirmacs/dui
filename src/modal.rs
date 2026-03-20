@@ -44,12 +44,12 @@ pub fn Modal(
         <div
             class=move || {
                 if open.get() {
-                    "fixed inset-0 z-50 flex items-center justify-center"
+                    "fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm"
                 } else {
                     "hidden"
                 }
             }
-            style="background: rgba(0,0,0,0.6);"
+            style="background: rgba(0,0,0,0.4);"
             on:mousedown=move |ev| {
                 use wasm_bindgen::JsCast;
                 if let Some(target) = ev.target() {
@@ -66,18 +66,18 @@ pub fn Modal(
                 aria-modal="true"
                 aria-label=title
                 class=format!(
-                    "bg-dm-panel border border-dm rounded-xl shadow-2xl w-full {}",
+                    "bg-[var(--dm-surface)] border-2 border-[var(--dm-border)] rounded-lg shadow-[var(--dm-shadow-xl)] w-full {}",
                     max_width
                 )
             >
                 // Title bar
                 {has_title.then(|| view! {
-                    <div class="flex items-center justify-between px-6 py-4 border-b border-dm">
-                        <h2 class="text-lg font-semibold text-dm-text">{title}</h2>
+                    <div class="flex items-center justify-between px-6 py-4 border-b-2 border-[var(--dm-border)]">
+                        <h2 class="text-lg font-semibold text-[var(--dm-text)]">{title}</h2>
                         <button
                             on:click=move |_| open.set(false)
                             aria-label="Close dialog"
-                            class="p-1 rounded-md text-dm-muted hover:text-dm-text hover:bg-dm-hover transition-colors dm-focus-ring"
+                            class="p-1 rounded-md text-[var(--dm-text-secondary)] hover:text-[var(--dm-text)] hover:bg-[var(--dm-surface-hover)] transition-colors dm-focus-ring"
                         >
                             <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none"
                                  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
