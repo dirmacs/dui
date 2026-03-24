@@ -1,12 +1,8 @@
 //! Login page component — authenticates against Eruka.
-//!
-//! Reusable across all DIRMACS frontends. Uses DUI components
-//! (Card, Input, Button, AlertBanner) for consistent styling.
 
 use leptos::prelude::*;
 use super::state::{AuthConfig, UserInfo, store_auth};
 
-/// Response from Eruka login endpoint.
 #[derive(Clone, Debug, serde::Deserialize)]
 struct LoginResponse {
     token: String,
@@ -21,21 +17,18 @@ struct LoginUser {
 }
 
 /// Shared login page for all DIRMACS products.
-///
-/// Authenticates against Eruka `/api/v1/auth/login`.
-/// On success, stores JWT + user info in localStorage and calls `on_success`.
 #[component]
 pub fn LoginPage(
     config: AuthConfig,
-    #[prop(optional)] on_success: Option<Callback<()>>,
+    #[prop(optional)] on_success: Option<WriteSignal<bool>>,
 ) -> impl IntoView {
     let email = RwSignal::new(String::new());
     let password = RwSignal::new(String::new());
     let error = RwSignal::new(String::new());
     let loading = RwSignal::new(false);
-    let eruka_url = config.eruka_url.clone();
+    let eruka_url = StoredValue::new(config.eruka_url.clone());
 
-    let handle_login = move |_: web_sys::MouseEvent| {
+    let do_login = move || {
         let em = email.get();
         let pw = password.get();
         if em.is_empty() || pw.is_empty() {
@@ -46,8 +39,7 @@ pub fn LoginPage(
         loading.set(true);
         error.set(String::new());
 
-        let url = eruka_url.clone();
-        let on_success = on_success.clone();
+        let url = eruka_url.get_value();
         wasm_bindgen_futures::spawn_local(async move {
             let login_url = format!("{}/api/v1/auth/login", url);
             let body = serde_json::json!({"email": em, "password": pw});
@@ -68,10 +60,9 @@ pub fn LoginPage(
                                 name: data.user.name,
                             };
                             store_auth(&data.token, &user);
-                            if let Some(cb) = on_success {
-                                cb.call(());
+                            if let Some(setter) = on_success {
+                                setter.set(true);
                             } else {
-                                // Reload page to trigger AuthGuard
                                 if let Some(window) = web_sys::window() {
                                     let _ = window.location().reload();
                                 }
@@ -85,11 +76,10 @@ pub fn LoginPage(
                 }
                 Ok(resp) => {
                     let status = resp.status();
-                    let body = resp.text().await.unwrap_or_default();
                     if status == 401 {
                         error.set("Invalid email or password".to_string());
                     } else {
-                        error.set(format!("Login failed ({}): {}", status, body));
+                        error.set(format!("Login failed ({})", status));
                     }
                     loading.set(false);
                 }
@@ -101,11 +91,8 @@ pub fn LoginPage(
         });
     };
 
-    let handle_keydown = move |ev: web_sys::KeyboardEvent| {
-        if ev.key() == "Enter" {
-            handle_login(web_sys::MouseEvent::new("click").unwrap());
-        }
-    };
+    let do_login_click = do_login.clone();
+    let do_login_key = do_login.clone();
 
     view! {
         <div class="dui-auth-login">
@@ -125,7 +112,9 @@ pub fn LoginPage(
                                 placeholder="you@dirmacs.com"
                                 prop:value=move || email.get()
                                 on:input=move |ev| email.set(event_target_value(&ev))
-                                on:keydown=handle_keydown.clone()
+                                on:keydown=move |ev: web_sys::KeyboardEvent| {
+                                    if ev.key() == "Enter" { do_login_key(); }
+                                }
                             />
                         </div>
                         <div class="dui-auth-field">
@@ -136,24 +125,22 @@ pub fn LoginPage(
                                 placeholder="Password"
                                 prop:value=move || password.get()
                                 on:input=move |ev| password.set(event_target_value(&ev))
-                                on:keydown=handle_keydown.clone()
+                                on:keydown=move |ev: web_sys::KeyboardEvent| {
+                                    if ev.key() == "Enter" { do_login(); }
+                                }
                             />
                         </div>
 
                         {move || {
                             let err = error.get();
-                            if err.is_empty() {
-                                None
-                            } else {
-                                Some(view! {
-                                    <div class="dui-auth-error">{err}</div>
-                                })
+                            if err.is_empty() { None } else {
+                                Some(view! { <div class="dui-auth-error">{err}</div> })
                             }
                         }}
 
                         <button
                             class="dui-auth-button"
-                            on:click=handle_login.clone()
+                            on:click=move |_| do_login_click()
                             prop:disabled=move || loading.get()
                         >
                             {move || if loading.get() { "Signing in..." } else { "Sign in" }}

@@ -86,6 +86,9 @@ pub mod textarea;
 pub mod toast;
 pub mod tooltip;
 
+/// Shared authentication for all DIRMACS frontends.
+pub mod auth;
+
 /// Re-export all components at crate root for convenience.
 pub mod prelude {
     pub use crate::accordion::*;
