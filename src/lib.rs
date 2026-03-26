@@ -87,7 +87,7 @@ pub mod toast;
 pub mod tooltip;
 
 /// Shared authentication for all DIRMACS frontends.
-pub mod auth;
+// pub mod auth;
 
 /// Re-export all components at crate root for convenience.
 pub mod prelude {
