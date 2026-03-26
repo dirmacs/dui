@@ -16,7 +16,7 @@
 
 ---
 
-DUI is a production-ready UI component library for [Leptos 0.7](https://leptos.dev) CSR applications. It ships 29 components with built-in accessibility (ARIA roles, keyboard navigation, focus management), a complete design token system via CSS custom properties, and dark/light mode support out of the box.
+DUI is a production-ready UI component library for [Leptos 0.8](https://leptos.dev) CSR applications. It ships 29 components with built-in accessibility (ARIA roles, keyboard navigation, focus management), a complete design token system via CSS custom properties, and dark/light mode support out of the box.
 
 It powers three shipping applications and is built by [Dirmacs](https://dirmacs.com).
 
