@@ -68,3 +68,52 @@ pub fn logout() {
     let _ = LocalStorage::delete(TOKEN_KEY);
     let _ = LocalStorage::delete(USER_KEY);
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_user_info_serde_roundtrip() {
+        let user = UserInfo {
+            id: "u-1".into(),
+            email: "test@dirmacs.com".into(),
+            name: Some("Test User".into()),
+        };
+        let json = serde_json::to_string(&user).unwrap();
+        let parsed: UserInfo = serde_json::from_str(&json).unwrap();
+        assert_eq!(parsed.id, "u-1");
+        assert_eq!(parsed.email, "test@dirmacs.com");
+        assert_eq!(parsed.name, Some("Test User".to_string()));
+    }
+
+    #[test]
+    fn test_user_info_without_name() {
+        let json = r#"{"id":"u1","email":"a@b.com"}"#;
+        let user: UserInfo = serde_json::from_str(json).unwrap();
+        assert!(user.name.is_none());
+    }
+
+    #[test]
+    fn test_auth_config_construction() {
+        let config = AuthConfig {
+            eruka_url: "https://eruka.dirmacs.com".into(),
+            product_name: "Admin".into(),
+            product_subtitle: "Dashboard".into(),
+        };
+        assert_eq!(config.eruka_url, "https://eruka.dirmacs.com");
+    }
+
+    #[test]
+    fn test_auth_state_empty() {
+        let state = AuthState { token: None, user: None };
+        assert!(state.token.is_none());
+        assert!(state.user.is_none());
+    }
+
+    #[test]
+    fn test_storage_keys_stable() {
+        assert_eq!(TOKEN_KEY, "dirmacs_jwt");
+        assert_eq!(USER_KEY, "dirmacs_user");
+    }
+}
