@@ -30,7 +30,7 @@ pub fn ChatInput(
                 rows="1"
                 placeholder=placeholder
                 disabled=move || loading.get()
-                class="flex-1 resize-none rounded-md px-3 py-2 text-sm bg-[var(--dm-surface)] text-[var(--dm-text)] border-2 border-[var(--dm-border)] focus:outline-none focus:ring-2 focus:ring-[var(--dm-accent)] disabled:opacity-50"
+                class="flex-1 resize-none rounded-md px-3 py-2 text-sm bg-[var(--dm-surface)] text-[var(--dm-text)] border-2 border-[var(--dm-border)] focus:outline-none focus:ring-2 focus:ring-[var(--dm-accent)] disabled:opacity-50 input-glow"
                 prop:value=move || value.get()
                 on:input=move |ev| {
                     let target = ev.target().unwrap();
@@ -51,7 +51,7 @@ pub fn ChatInput(
             <button
                 type="button"
                 disabled=move || loading.get() || value.get().trim().is_empty()
-                class="px-4 py-2 rounded-lg text-sm font-medium bg-[var(--dm-accent)] text-white hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed min-h-[40px]"
+                class="px-4 py-2 rounded-lg text-sm font-medium bg-[var(--dm-accent)] text-white hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed min-h-[40px] btn-press"
                 on:click=move |_| {
                     let msg = value.get().trim().to_string();
                     if !msg.is_empty() && !loading.get() {

@@ -34,7 +34,7 @@ pub fn ChatMessage(
     let use_html = html && !is_user;
     let anim_class = if is_user { "dm-msg-user" } else { "dm-msg-system" };
     let bubble_class = format!(
-        "max-w-[80%] px-4 py-2.5 rounded-lg text-sm leading-relaxed {}",
+        "px-4 py-2.5 rounded-lg text-sm leading-relaxed {}",
         if is_user {
             "border-2 border-[var(--dm-accent)] bg-[var(--dm-accent-muted)] text-[var(--dm-text)] rounded-br-sm"
         } else {
@@ -50,9 +50,9 @@ pub fn ChatMessage(
         )>
             {if use_html {
                 let cls = bubble_class.clone();
-                view! { <div class=cls inner_html=content /> }.into_any()
+                view! { <div class=cls style="max-width: 600px" inner_html=content /> }.into_any()
             } else {
-                view! { <div class=bubble_class>{content}</div> }.into_any()
+                view! { <div class=bubble_class style="max-width: 600px">{content}</div> }.into_any()
             }}
         </div>
     }
