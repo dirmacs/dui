@@ -25,9 +25,11 @@ pub struct SidebarUser {
 /// A collapsible sidebar navigation panel.
 ///
 /// Features:
-/// - Collapse to icon-only mode (48px) or expand to full (256px).
-/// - Active item has an accent left-border indicator.
-/// - User avatar at the bottom with name/email (hidden when collapsed).
+/// - Collapse to icon-only mode (64px) or expand to full (256px).
+/// - Active item uses the `nav-item active` CSS class (animated left-border,
+///   gradient background, accent text color).
+/// - User avatar at the bottom with gradient circle + initials.
+/// - Labels fade smoothly on collapse/expand via CSS transitions.
 #[component]
 pub fn Sidebar(
     /// List of nav items.
@@ -52,35 +54,35 @@ pub fn Sidebar(
     view! {
         <aside class=move || format!(
             "h-screen bg-[var(--dm-surface)] border-r border-[var(--dm-border)] flex flex-col \
-             transition-all duration-300 ease-out shrink-0 {}",
+             shrink-0 overflow-hidden {}",
             if collapsed.get() { "w-16" } else { "w-64" }
-        )>
+        )
+        style="transition: width var(--dm-duration-slow, 350ms) cubic-bezier(0.4, 0, 0.2, 1)"
+        >
             // Brand header
-            <div class="flex items-center gap-3 px-4 h-14 border-b border-[var(--dm-border)] shrink-0">
-                // Logo mark
-                <div class="w-8 h-8 rounded-lg bg-[var(--dm-accent)]/20 flex items-center justify-center \
-                            text-[var(--dm-accent)] font-bold text-sm shrink-0">
+            <div class=move || format!(
+                "flex items-center h-14 border-b border-[var(--dm-border)] shrink-0 {}",
+                if collapsed.get() { "justify-center px-2" } else { "gap-3 px-4" }
+            )>
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center \
+                            text-white font-bold text-sm shrink-0"
+                     style="background: linear-gradient(135deg, #2563eb, #3b82f6)">
                     "D"
                 </div>
                 <Show when=move || !collapsed.get()>
-                    <span class="text-[var(--dm-text)] font-semibold text-sm truncate">{brand}</span>
+                    <span class="font-semibold text-sm tracking-wide text-gray-100 truncate">{brand}</span>
+                    <button
+                        class="ml-auto p-1.5 rounded-md text-[var(--dm-text-dim)] hover:text-[var(--dm-text)] \
+                               hover:bg-[var(--dm-surface-hover)]"
+                        on:click=move |_| collapsed.set(true)
+                    >
+                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                           stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M15.75 19.5 8.25 12l7.5-7.5" />
+                        </svg>
+                    </button>
                 </Show>
-
-                // Collapse toggle
-                <button
-                    class="ml-auto p-1.5 rounded-md text-[var(--dm-text-dim)] hover:text-[var(--dm-text)] \
-                           hover:bg-[var(--dm-surface-hover)] transition-colors duration-150"
-                    on:click=move |_| collapsed.update(|c| *c = !*c)
-                >
-                    <svg class=move || format!(
-                        "w-4 h-4 transition-transform duration-300 {}",
-                        if collapsed.get() { "rotate-180" } else { "" }
-                    ) xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                       stroke-width="2" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                              d="M15.75 19.5 8.25 12l7.5-7.5" />
-                    </svg>
-                </button>
             </div>
 
             // Nav items
@@ -95,14 +97,10 @@ pub fn Sidebar(
                                 let is_active = active.get() == key;
                                 format!(
                                     "w-full flex items-center gap-3 rounded-lg \
-                                     transition-all duration-150 relative group {} {}",
+                                     relative nav-item text-[var(--dm-text-secondary)] {} {}",
                                     if collapsed.get() { "px-3 py-2.5 justify-center" }
                                     else { "px-3 py-2.5" },
-                                    if is_active {
-                                        "bg-[var(--dm-accent)]/10 text-[var(--dm-accent)]"
-                                    } else {
-                                        "text-[var(--dm-text-secondary)] hover:text-[var(--dm-text)] hover:bg-[var(--dm-surface-hover)]"
-                                    }
+                                    if is_active { "active" } else { "" }
                                 )
                             }
                             on:click={
@@ -114,29 +112,40 @@ pub fn Sidebar(
                                 }
                             }
                         >
-                            // Active indicator bar
-                            <Show when={
-                                let key = item.key.clone();
-                                move || active.get() == key
-                            }>
-                                <span class="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 \
-                                             bg-[var(--dm-accent)] rounded-r-full"></span>
-                            </Show>
-
                             // Icon
                             <svg class="w-5 h-5 shrink-0" xmlns="http://www.w3.org/2000/svg"
                                  fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" d=item.icon_path.clone() />
                             </svg>
 
-                            // Label (hidden when collapsed)
-                            <Show when=move || !collapsed.get()>
-                                <span class="text-sm font-medium truncate">{item.label.clone()}</span>
-                            </Show>
+                            // Label — always rendered, fades via CSS
+                            <span class=move || format!(
+                                "text-sm font-medium truncate dm-sidebar-label {}",
+                                if collapsed.get() { "dm-sidebar-label-hidden" } else { "dm-sidebar-label-visible" }
+                            )>{item.label.clone()}</span>
                         </button>
                     }
                 }).collect::<Vec<_>>()}
             </nav>
+
+            // Expand button — only when collapsed, sits below nav items
+            <Show when=move || collapsed.get()>
+                <div class="px-2 pb-2 shrink-0">
+                    <button
+                        class="w-full flex items-center justify-center py-2 rounded-lg \
+                               text-[var(--dm-text-dim)] hover:text-[var(--dm-text)] \
+                               hover:bg-[var(--dm-surface-hover)]"
+                        on:click=move |_| collapsed.set(false)
+                        title="Expand sidebar"
+                    >
+                        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                           stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
+                        </svg>
+                    </button>
+                </div>
+            </Show>
 
             // User section at bottom
             {user.map(|u| {
@@ -152,12 +161,13 @@ pub fn Sidebar(
                     <div class="border-t border-[var(--dm-border)] px-3 py-3 shrink-0">
                         <div class=move || format!(
                             "flex items-center gap-3 rounded-lg p-2 \
-                             hover:bg-[var(--dm-surface-hover)] transition-colors duration-150 cursor-pointer {}",
+                             hover:bg-[var(--dm-surface-hover)] cursor-pointer {}",
                             if collapsed.get() { "justify-center" } else { "" }
                         )>
-                            // Avatar
-                            <div class="w-8 h-8 rounded-full bg-[var(--dm-accent)]/20 flex items-center justify-center \
-                                        text-[var(--dm-accent)] text-xs font-semibold shrink-0 overflow-hidden">
+                            // Avatar — gradient circle with initials
+                            <div class="w-9 h-9 rounded-full flex items-center justify-center \
+                                        text-white text-sm font-semibold shrink-0 overflow-hidden"
+                                 style="background: linear-gradient(135deg, #2563eb, #7c3aed)">
                                 {if has_avatar {
                                     view! { <img src=avatar_url.clone() class="w-full h-full object-cover" /> }.into_any()
                                 } else {
@@ -165,12 +175,13 @@ pub fn Sidebar(
                                 }}
                             </div>
 
-                            <Show when=move || !collapsed.get()>
-                                <div class="flex-1 min-w-0">
-                                    <div class="text-sm font-medium text-[var(--dm-text)] truncate">{u.name.clone()}</div>
-                                    <div class="text-xs text-[var(--dm-text-dim)] truncate">{u.email.clone()}</div>
-                                </div>
-                            </Show>
+                            <div class=move || format!(
+                                "flex-1 min-w-0 dm-sidebar-label {}",
+                                if collapsed.get() { "dm-sidebar-label-hidden" } else { "dm-sidebar-label-visible" }
+                            )>
+                                <div class="text-sm font-medium text-gray-200 truncate">{u.name.clone()}</div>
+                                <div class="text-xs text-gray-500 truncate">{u.email.clone()}</div>
+                            </div>
                         </div>
                     </div>
                 }
