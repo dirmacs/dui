@@ -44,10 +44,11 @@
 //! |----------|-----------|
 //! | **Form** | Button, Input, Textarea, Select, Checkbox, Radio, Switch |
 //! | **Data** | Badge, Card, Table, Avatar, StatsCard, StatusBadge, ProgressBar, Skeleton |
-//! | **Nav** | Sidebar, Tabs, Breadcrumb |
+//! | **Nav** | Sidebar, Tabs, Breadcrumb, Navbar |
 //! | **Overlay** | Modal, Tooltip, Dropdown, Sheet, CommandPalette |
 //! | **Feedback** | Toast, AlertBanner, EmptyState |
-//! | **Layout** | Divider, Accordion, Kbd |
+//! | **Layout** | Divider, Accordion, Kbd, PublicLayout |
+//! | **Landing** | Hero, Footer, FeatureGrid |
 
 pub mod accordion;
 pub mod ai_view;
@@ -65,12 +66,17 @@ pub mod command;
 pub mod divider;
 pub mod dropdown;
 pub mod empty_state;
+pub mod feature_grid;
 pub mod file_upload;
+pub mod footer;
 pub mod input;
 pub mod kbd;
+pub mod hero;
 pub mod modal;
+pub mod navbar;
 pub mod progress_bar;
 pub mod radio;
+pub mod public_layout;
 pub mod select;
 pub mod score_ring;
 pub mod sheet;
@@ -107,12 +113,17 @@ pub mod prelude {
     pub use crate::divider::*;
     pub use crate::dropdown::*;
     pub use crate::empty_state::*;
+    pub use crate::feature_grid::*;
     pub use crate::file_upload::*;
+    pub use crate::footer::*;
+    pub use crate::hero::*;
     pub use crate::input::*;
     pub use crate::kbd::*;
     pub use crate::modal::*;
+    pub use crate::navbar::*;
     pub use crate::progress_bar::*;
     pub use crate::radio::*;
+    pub use crate::public_layout::*;
     pub use crate::select::*;
     pub use crate::score_ring::*;
     pub use crate::sheet::*;

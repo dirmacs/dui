@@ -1,8 +1,8 @@
 [package]
 name = "dui-leptos"
-version = "0.4.0"
+version = "0.5.0"
 edition = "2021"
-description = "DUI — A production-ready Leptos 0.7 component library. 29 accessible, signal-driven components with a dark-first design system."
+description = "DUI — A production-ready Leptos 0.8 component library. 36 accessible, signal-driven components with a dark-first design system. Includes public page components: Navbar, Footer, Hero, PublicLayout, FeatureGrid."
 license = "MIT"
 authors = ["Dirmacs <dev@dirmacs.com>"]
 repository = "https://github.com/dirmacs/dui"
