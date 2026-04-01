@@ -3,7 +3,7 @@
 
 use leptos::prelude::*;
 
-/// A navigation link item. Can be a simple link or a dropdown with children.
+/// A navigation link item.
 #[derive(Debug, Clone)]
 pub struct NavItem {
     pub label: String,
@@ -12,11 +12,9 @@ pub struct NavItem {
 }
 
 impl NavItem {
-    /// Simple link item.
     pub fn link(label: &str, href: &str) -> Self {
         Self { label: label.to_string(), href: Some(href.to_string()), children: vec![] }
     }
-    /// Dropdown item with children.
     pub fn dropdown(label: &str, children: Vec<NavDropdownItem>) -> Self {
         Self { label: label.to_string(), href: None, children }
     }
@@ -52,48 +50,22 @@ impl NavCta {
 
 /// Horizontal top navigation bar for public-facing pages.
 ///
-/// Features:
-/// - Fixed position, transparent → glass blur on scroll
-/// - Mobile hamburger toggle at 768px
-/// - Dropdown menus with label + description per item
-/// - CTA button
-///
-/// # Example
-/// ```rust,ignore
-/// view! {
-///     <Navbar
-///         brand_name="DIRMACS"
-///         brand_logo_url=Some("logo.png")
-///         items=vec![
-///             NavItem::dropdown("Solutions", vec![
-///                 NavDropdownItem::new("Eruka", "Context Intelligence", "https://eruka.dirmacs.com"),
-///             ]),
-///             NavItem::link("About", "/about"),
-///         ]
-///         cta=Some(NavCta::new("Get Started", "/start"))
-///     />
-/// }
-/// ```
+/// Uses DUI CSS classes: `.dm-nav`, `.dm-nav-scrolled`, `.dm-nav-inner`, `.dm-nav-brand`, `.dm-nav-links`, `.dm-nav-cta`, `.dm-nav-mobile`.
+/// No Tailwind required.
 #[component]
 pub fn Navbar(
-    /// Brand name displayed next to logo.
     brand_name: &'static str,
-    /// Optional logo image URL.
     #[prop(optional)]
     brand_logo_url: Option<&'static str>,
-    /// Navigation items (links and dropdowns).
     items: Vec<NavItem>,
-    /// Optional CTA button. Pass a NavCta directly; omit for no CTA.
     #[prop(optional, into)]
     cta: Option<NavCta>,
-    /// Optional extra CSS classes on the nav element.
     #[prop(default = "")]
     class: &'static str,
 ) -> impl IntoView {
     let scrolled = RwSignal::new(false);
     let mobile_open = RwSignal::new(false);
 
-    // Scroll listener for glass effect
     Effect::new(move |_| {
         use wasm_bindgen::closure::Closure;
         use wasm_bindgen::JsCast;
@@ -111,48 +83,43 @@ pub fn Navbar(
 
     view! {
         <nav class=move || format!(
-            "fixed top-0 left-0 right-0 z-[100] h-16 border-b transition-all duration-300 ease-out {} {}",
-            if scrolled.get() {
-                "bg-[rgba(9,9,11,0.92)] backdrop-blur-xl border-[var(--dm-border)]"
-            } else {
-                "bg-transparent border-transparent"
-            },
+            "dm-nav {} {}",
+            if scrolled.get() { "dm-nav-scrolled" } else { "" },
             class,
         )>
-            <div class="max-w-[1200px] mx-auto px-6 flex items-center justify-between h-full">
-                // Brand
-                <a href="/" class="flex items-center gap-2.5 no-underline">
+            <div class="dm-nav-inner">
+                <a href="/" class="dm-nav-brand">
                     {brand_logo_url.map(|url| view! {
-                        <img src=url alt="" class="w-7 h-7 rounded-md" />
+                        <img src=url alt="" style="width:28px;height:28px;border-radius:var(--dm-radius)" />
                     })}
-                    <span class="font-mono text-[15px] font-bold text-[var(--dm-text)] tracking-[0.06em] uppercase">
-                        {brand_name}
-                    </span>
+                    <span class="dm-nav-brand-text">{brand_name}</span>
                 </a>
 
-                // Desktop links
-                <div class="hidden md:flex items-center gap-8">
+                <div class="dm-nav-links dm-md-hidden-up" style="display:none">
+                    // Hidden on mobile via CSS
+                </div>
+                <div class="dm-nav-links" style="display:flex">
                     {items.iter().map(|item| {
                         if item.is_dropdown() {
                             let children = item.children.clone();
                             let label = item.label.clone();
                             view! {
-                                <div class="relative group">
-                                    <span class="flex items-center gap-1 font-sans text-sm font-medium text-[var(--dm-text-secondary)] cursor-pointer transition-colors duration-150 hover:text-[var(--dm-text)]">
+                                <div class="dm-relative" style="display:inline-block">
+                                    <span class="dm-nav-links dm-cursor-pointer" style="display:flex;align-items:center;gap:4px;color:var(--dm-text-secondary)">
                                         {label}
-                                        <svg class="w-3 h-3 opacity-50" viewBox="0 0 12 12" fill="currentColor">
+                                        <svg style="width:12px;height:12px;opacity:0.5" viewBox="0 0 12 12" fill="currentColor">
                                             <path d="M2.5 4.5L6 8l3.5-3.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
                                         </svg>
                                     </span>
-                                    <div class="absolute top-[calc(100%+12px)] left-[-16px] bg-[var(--dm-surface)] border-[1.5px] border-[var(--dm-border)] rounded-lg p-2 min-w-[280px] opacity-0 pointer-events-none -translate-y-2 transition-all duration-200 ease-out group-hover:opacity-100 group-hover:pointer-events-auto group-hover:translate-y-0 z-50">
+                                    <div class="dm-dropdown-menu" style="position:absolute;top:calc(100% + 12px);left:-16px;min-width:280px;opacity:0;pointer-events:none;transform:translateY(-8px);transition:all 0.2s ease">
                                         {children.iter().map(|child| {
                                             let href = child.href.clone();
                                             let label = child.label.clone();
                                             let desc = child.description.clone();
                                             view! {
-                                                <a href=href class="block px-3.5 py-2.5 rounded-md no-underline transition-all duration-150 hover:bg-[rgba(255,255,255,0.04)]">
-                                                    <div class="font-mono text-[11px] font-bold tracking-[0.04em] text-[var(--dm-text)]">{label}</div>
-                                                    <div class="text-[11px] text-[var(--dm-text-muted)] mt-0.5">{desc}</div>
+                                                <a href=href class="dm-dropdown-item" style="display:block;padding:10px 14px">
+                                                    <div class="dm-font-mono dm-font-bold dm-text-xs dm-text-primary" style="letter-spacing:0.04em">{label}</div>
+                                                    <div class="dm-text-xs dm-text-muted" style="margin-top:2px">{desc}</div>
                                                 </a>
                                             }
                                         }).collect::<Vec<_>>()}
@@ -163,7 +130,7 @@ pub fn Navbar(
                             let href = item.href.clone().unwrap_or_default();
                             let label = item.label.clone();
                             view! {
-                                <a href=href class="font-sans text-sm font-medium text-[var(--dm-text-secondary)] no-underline transition-colors duration-150 hover:text-[var(--dm-text)]">
+                                <a href=href class="dm-no-underline dm-text-secondary dm-transition-colors" style="font-family:var(--dm-font-body);font-size:14px;font-weight:500">
                                     {label}
                                 </a>
                             }.into_any()
@@ -171,71 +138,50 @@ pub fn Navbar(
                     }).collect::<Vec<_>>()}
                 </div>
 
-                // Desktop CTA
-                <div class="hidden md:block">
+                <div class="dm-nav-right" style="display:flex;align-items:center;gap:1rem">
                     {cta.map(|c| {
                         let href = c.href.clone();
                         let label = c.label.clone();
-                        view! {
-                            <a href=href class="font-mono text-[11px] font-semibold uppercase tracking-[0.05em] px-5 py-2 rounded-md border-[1.5px] border-[var(--dm-accent)] bg-[var(--dm-accent)] text-white no-underline transition-all duration-150 hover:bg-[var(--dm-accent-hover)] hover:border-[var(--dm-accent-hover)] hover:-translate-y-px">
-                                {label}
-                            </a>
-                        }
+                        view! { <a href=href class="dm-nav-cta">{label}</a> }
                     })}
                 </div>
 
-                // Mobile toggle
                 <button
-                    class="md:hidden bg-transparent border-none text-[var(--dm-text-secondary)] cursor-pointer"
+                    class="dm-nav-mobile-toggle"
                     on:click=move |_| mobile_open.update(|v| *v = !*v)
                     aria-label="Menu"
                 >
-                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M3 12h18M3 6h18M3 18h18"/>
-                    </svg>
+                    <svg style="width:24px;height:24px" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
                 </button>
             </div>
         </nav>
 
-        // Mobile menu overlay
+        // Mobile menu
         <Show when=move || mobile_open.get()>
-            <div class="fixed inset-0 z-[200] bg-[var(--dm-bg)] flex flex-col items-center justify-center gap-8 animate-[dm-fade-in_0.3s_ease-out]">
+            <div class="dm-nav-mobile open">
                 {items_mobile.iter().flat_map(|item| {
                     if item.is_dropdown() {
                         item.children.iter().map(|child| {
                             let href = child.href.clone();
                             let label = child.label.clone();
                             view! {
-                                <a href=href class="font-sans text-xl text-[var(--dm-text-secondary)] no-underline transition-colors hover:text-[var(--dm-text)]" on:click=move |_| mobile_open.set(false)>
-                                    {label}
-                                </a>
+                                <a href=href class="dm-no-underline dm-text-secondary" style="font-size:20px" on:click=move |_| mobile_open.set(false)>{label}</a>
                             }.into_any()
                         }).collect::<Vec<_>>()
                     } else {
                         let href = item.href.clone().unwrap_or_default();
                         let label = item.label.clone();
                         vec![view! {
-                            <a href=href class="font-sans text-xl text-[var(--dm-text-secondary)] no-underline transition-colors hover:text-[var(--dm-text)]" on:click=move |_| mobile_open.set(false)>
-                                {label}
-                            </a>
+                            <a href=href class="dm-no-underline dm-text-secondary" style="font-size:20px" on:click=move |_| mobile_open.set(false)>{label}</a>
                         }.into_any()]
                     }
                 }).collect::<Vec<_>>()}
                 {cta_mobile.as_ref().map(|c| {
                     let href = c.href.clone();
                     let label = c.label.clone();
-                    view! {
-                        <a href=href class="font-mono text-[13px] font-semibold uppercase tracking-[0.05em] px-8 py-3 rounded-md border-[1.5px] border-[var(--dm-accent)] bg-[var(--dm-accent)] text-white no-underline" on:click=move |_| mobile_open.set(false)>
-                            {label}
-                        </a>
-                    }
+                    view! { <a href=href class="dm-nav-cta" on:click=move |_| mobile_open.set(false)>{label}</a> }
                 })}
-                <button
-                    class="mt-4 bg-transparent border-none text-[var(--dm-text-muted)] cursor-pointer font-mono text-sm"
-                    on:click=move |_| mobile_open.set(false)
-                >
-                    "Close"
-                </button>
+                <button class="dm-btn dm-btn-ghost dm-mt-4" on:click=move |_| mobile_open.set(false)>"Close"</button>
             </div>
         </Show>
     }

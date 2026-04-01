@@ -2,112 +2,45 @@
 
 use leptos::prelude::*;
 
-/// A column of links in the footer.
 #[derive(Debug, Clone)]
-pub struct FooterColumn {
-    pub heading: String,
-    pub links: Vec<FooterLink>,
-}
+pub struct FooterColumn { pub heading: String, pub links: Vec<FooterLink> }
+impl FooterColumn { pub fn new(heading: &str, links: Vec<FooterLink>) -> Self { Self { heading: heading.to_string(), links } } }
 
-impl FooterColumn {
-    pub fn new(heading: &str, links: Vec<FooterLink>) -> Self {
-        Self { heading: heading.to_string(), links }
-    }
-}
-
-/// A link in a footer column.
 #[derive(Debug, Clone)]
-pub struct FooterLink {
-    pub label: String,
-    pub href: String,
-}
+pub struct FooterLink { pub label: String, pub href: String }
+impl FooterLink { pub fn new(label: &str, href: &str) -> Self { Self { label: label.to_string(), href: href.to_string() } } }
 
-impl FooterLink {
-    pub fn new(label: &str, href: &str) -> Self {
-        Self { label: label.to_string(), href: href.to_string() }
-    }
-}
-
-/// Social media platform identifiers.
 #[derive(Debug, Clone, Copy, PartialEq)]
-pub enum SocialPlatform {
-    LinkedIn,
-    Twitter,
-    GitHub,
-}
+pub enum SocialPlatform { LinkedIn, Twitter, GitHub }
 
-/// A social link in the footer.
 #[derive(Debug, Clone)]
-pub struct SocialLink {
-    pub platform: SocialPlatform,
-    pub href: String,
-}
+pub struct SocialLink { pub platform: SocialPlatform, pub href: String }
+impl SocialLink { pub fn new(platform: SocialPlatform, href: &str) -> Self { Self { platform, href: href.to_string() } } }
 
-impl SocialLink {
-    pub fn new(platform: SocialPlatform, href: &str) -> Self {
-        Self { platform, href: href.to_string() }
-    }
-}
-
-/// Site footer with brand, link columns, social, trust line, and copyright.
-///
-/// # Example
-/// ```rust,ignore
-/// view! {
-///     <Footer
-///         brand_name="DIRMACS"
-///         tagline="Democratising Innovation."
-///         columns=vec![
-///             FooterColumn::new("Solutions", vec![FooterLink::new("Eruka", "https://eruka.dirmacs.com")]),
-///         ]
-///         social_links=vec![SocialLink::new(SocialPlatform::GitHub, "https://github.com/dirmacs")]
-///         copyright="© 2026 Dirmacs Private Limited"
-///     />
-/// }
-/// ```
+/// Site footer. Uses DUI CSS: `.dm-footer`, `.dm-footer-grid`, `.dm-footer-heading`, `.dm-footer-link`, `.dm-footer-social`, `.dm-footer-trust`, `.dm-footer-bottom`.
+/// No Tailwind required.
 #[component]
 pub fn Footer(
-    /// Brand name.
     brand_name: &'static str,
-    /// Optional brand logo URL.
-    #[prop(optional)]
-    brand_logo_url: Option<&'static str>,
-    /// Short tagline under brand.
-    #[prop(default = "")]
-    tagline: &'static str,
-    /// Link columns.
+    #[prop(optional)] brand_logo_url: Option<&'static str>,
+    #[prop(default = "")] tagline: &'static str,
     columns: Vec<FooterColumn>,
-    /// Social links.
-    #[prop(optional)]
-    social_links: Vec<SocialLink>,
-    /// Trust line text (e.g. "BUILT IN RUST · PATENT PENDING").
-    #[prop(optional)]
-    trust_line: Option<&'static str>,
-    /// Copyright text.
+    #[prop(optional)] social_links: Vec<SocialLink>,
+    #[prop(optional)] trust_line: Option<&'static str>,
     copyright: &'static str,
-    /// Right-side text on the copyright bar (e.g. "Hyderabad, India").
-    #[prop(optional)]
-    legal_right: Option<&'static str>,
+    #[prop(optional)] legal_right: Option<&'static str>,
 ) -> impl IntoView {
     view! {
-        <footer class="border-t-2 border-[var(--dm-border)] pt-16 pb-8 mt-8">
-            <div class="max-w-[1200px] mx-auto px-6">
-                // Grid: brand + columns
-                <div class="grid gap-12" style=format!("grid-template-columns: 2fr {};", "1fr ".repeat(columns.len()))>
-                    // Brand column
-                    <div>
-                        <div class="flex items-center gap-2.5">
-                            {brand_logo_url.map(|url| view! {
-                                <img src=url alt="" class="w-7 h-7 rounded-md" />
-                            })}
-                            <span class="font-mono text-[15px] font-bold text-[var(--dm-text)] tracking-[0.06em] uppercase">
-                                {brand_name}
-                            </span>
+        <footer class="dm-footer">
+            <div class="dm-footer-inner">
+                <div class="dm-footer-grid">
+                    <div class="dm-footer-brand">
+                        <div class="dm-flex dm-items-center dm-gap-3">
+                            {brand_logo_url.map(|url| view! { <img src=url alt="" style="width:28px;height:28px;border-radius:var(--dm-radius)" /> })}
+                            <span class="dm-nav-brand-text">{brand_name}</span>
                         </div>
-                        <p class="text-[0.7rem] text-[var(--dm-text-muted)] mt-3 max-w-[260px] leading-relaxed">
-                            {tagline}
-                        </p>
-                        <div class="flex gap-4 mt-4">
+                        <p>{tagline}</p>
+                        <div class="dm-footer-social">
                             {social_links.iter().map(|link| {
                                 let href = link.href.clone();
                                 let svg = match link.platform {
@@ -117,46 +50,33 @@ pub fn Footer(
                                 };
                                 let label = format!("{:?}", link.platform);
                                 view! {
-                                    <a href=href target="_blank" rel="noopener" aria-label=label class="text-[var(--dm-text-muted)] transition-colors duration-150 hover:text-[var(--dm-text)]">
-                                        <svg viewBox="0 0 24 24" fill="currentColor" class="w-[18px] h-[18px]" inner_html=svg></svg>
+                                    <a href=href target="_blank" rel="noopener" aria-label=label class="dm-text-muted dm-transition-colors">
+                                        <svg viewBox="0 0 24 24" fill="currentColor" class="dm-footer-social" style="width:18px;height:18px" inner_html=svg></svg>
                                     </a>
                                 }
                             }).collect::<Vec<_>>()}
                         </div>
                     </div>
 
-                    // Link columns
                     {columns.iter().map(|col| {
                         let heading = col.heading.clone();
                         let links = col.links.clone();
                         view! {
                             <div>
-                                <div class="font-mono text-[0.625rem] font-bold uppercase tracking-[0.08em] text-[var(--dm-text-muted)] mb-4">
-                                    {heading}
-                                </div>
+                                <div class="dm-footer-heading">{heading}</div>
                                 {links.iter().map(|link| {
                                     let href = link.href.clone();
                                     let label = link.label.clone();
-                                    view! {
-                                        <a href=href class="block text-[0.75rem] text-[var(--dm-text-secondary)] no-underline mb-2 transition-colors duration-150 hover:text-[var(--dm-text)]">
-                                            {label}
-                                        </a>
-                                    }
+                                    view! { <a href=href class="dm-footer-link">{label}</a> }
                                 }).collect::<Vec<_>>()}
                             </div>
                         }
                     }).collect::<Vec<_>>()}
                 </div>
 
-                // Trust line
-                {trust_line.map(|text| view! {
-                    <div class="text-center font-mono text-[0.625rem] font-medium tracking-[0.08em] uppercase text-[var(--dm-text-dim)] py-8 border-t border-[var(--dm-border)] mt-12">
-                        {text}
-                    </div>
-                })}
+                {trust_line.map(|text| view! { <div class="dm-footer-trust">{text}</div> })}
 
-                // Copyright bar
-                <div class="flex flex-wrap justify-between gap-4 font-mono text-[0.6rem] text-[var(--dm-text-dim)] mt-4">
+                <div class="dm-footer-bottom">
                     <span>{copyright}</span>
                     {legal_right.map(|text| view! { <span>{text}</span> })}
                 </div>
