@@ -77,6 +77,7 @@ pub mod navbar;
 pub mod progress_bar;
 pub mod radio;
 pub mod public_layout;
+pub mod scroll_reveal;
 pub mod select;
 pub mod score_ring;
 pub mod sheet;
@@ -124,6 +125,7 @@ pub mod prelude {
     pub use crate::progress_bar::*;
     pub use crate::radio::*;
     pub use crate::public_layout::*;
+    pub use crate::scroll_reveal::*;
     pub use crate::select::*;
     pub use crate::score_ring::*;
     pub use crate::sheet::*;

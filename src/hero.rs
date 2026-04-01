@@ -40,7 +40,7 @@ pub fn Hero(
                 </div>
 
                 {if has_image && !is_left { Some(view! {
-                    <div class="dm-hero-visual dm-md-flex" style="display:none"><img src=image_url.unwrap_or_default() alt="" /></div>
+                    <div class="dm-hero-visual"><img src=image_url.unwrap_or_default() alt="" /></div>
                 }) } else { None }}
             </div>
         </section>

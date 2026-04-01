@@ -51,6 +51,10 @@ web-sys = { version = "0.3", features = [
 	"DataTransfer",
 	"Storage",
 	"Location",
+	"IntersectionObserver",
+	"IntersectionObserverInit",
+	"IntersectionObserverEntry",
+	"MediaQueryList",
 ] }
 
 gloo-timers = "0.3"
