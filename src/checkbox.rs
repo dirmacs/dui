@@ -4,14 +4,8 @@ use leptos::prelude::*;
 
 /// A custom-styled checkbox with optional label and description text.
 ///
-/// Uses an SVG checkmark instead of the native checkbox for consistent styling.
-/// Click anywhere on the row (checkbox, label, or description) to toggle.
-///
-/// # Example
-/// ```rust
-/// let agreed = RwSignal::new(false);
-/// view! { <Checkbox checked=agreed label="I agree to the terms" /> }
-/// ```
+/// Uses DUI CSS classes: `.dm-checkbox`, `.dm-checkbox-box`, `.dm-checkbox-checked`, etc.
+/// No Tailwind required.
 #[component]
 pub fn Checkbox(
     /// Reactive checked state (two-way binding).
@@ -42,13 +36,13 @@ pub fn Checkbox(
 
     view! {
         <div
-            class=format!(
-                "inline-flex items-start gap-2.5 select-none {}",
+            class=move || format!(
+                "dm-checkbox {} {}",
+                if disabled.get() { "dm-checkbox-disabled" } else { "" },
                 class,
             )
             on:click=move |_| toggle()
         >
-            // Custom checkbox box
             <span
                 role="checkbox"
                 aria-checked=move || if checked.get() { "true" } else { "false" }
@@ -56,17 +50,8 @@ pub fn Checkbox(
                 aria-labelledby=label_id
                 tabindex="0"
                 class=move || format!(
-                    "shrink-0 inline-flex items-center justify-center \
-                     w-[18px] h-[18px] rounded-[4px] border-2 \
-                     transition-all duration-150 \
-                     dm-focus-ring cursor-pointer \
-                     {} {}",
-                    if checked.get() {
-                        "bg-[var(--dm-accent)] border-[var(--dm-accent)]"
-                    } else {
-                        "bg-[var(--dm-surface)] border-[var(--dm-border)] hover:border-[var(--dm-border-hover)]"
-                    },
-                    if disabled.get() { "opacity-50 cursor-not-allowed" } else { "" },
+                    "dm-checkbox-box {}",
+                    if checked.get() { "dm-checkbox-checked" } else { "" },
                 )
                 on:keydown=move |ev: web_sys::KeyboardEvent| {
                     if ev.key() == " " {
@@ -75,48 +60,24 @@ pub fn Checkbox(
                     }
                 }
             >
-                // Checkmark SVG — only visible when checked
                 <Show when=move || checked.get()>
                     <svg
-                        class="w-3 h-3 text-white"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke-width="3"
-                        stroke="currentColor"
+                        style="width:12px;height:12px;color:#fff"
+                        xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 24 24" stroke-width="3" stroke="currentColor"
                     >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            d="M4.5 12.75l6 6 9-13.5"
-                        />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                     </svg>
                 </Show>
             </span>
 
-            // Label + Description
             {(label.is_some() || description.is_some()).then(|| view! {
-                <div class="flex flex-col gap-0.5">
+                <div>
                     {label.map(|l| view! {
-                        <span
-                            id=label_id_clone.clone()
-                            class=move || format!(
-                                "text-sm text-[var(--dm-text)] leading-tight {}",
-                                if disabled.get() { "opacity-50" } else { "cursor-pointer" },
-                            )
-                        >
-                            {l}
-                        </span>
+                        <span id=label_id_clone.clone() class="dm-checkbox-label">{l}</span>
                     })}
                     {description.map(|d| view! {
-                        <span
-                            class=move || format!(
-                                "text-xs text-[var(--dm-text-secondary)] leading-snug {}",
-                                if disabled.get() { "opacity-50" } else { "cursor-pointer" },
-                            )
-                        >
-                            {d}
-                        </span>
+                        <span class="dm-checkbox-desc">{d}</span>
                     })}
                 </div>
             })}

@@ -1,15 +1,15 @@
-//! Input — text / password / search with label, error message, focus ring.
+//! Input — text / password / search / email with label, error message, focus ring.
 
 use leptos::prelude::*;
 
 /// Input field type.
 #[derive(Debug, Clone, Copy, Default, PartialEq)]
 pub enum InputType {
- #[default]
- Text,
- Password,
- Search,
- Email, // NEW — adds type="email" for browser email validation
+    #[default]
+    Text,
+    Password,
+    Search,
+    Email,
 }
 
 impl InputType {
@@ -25,10 +25,11 @@ impl InputType {
 
 /// A styled text input with optional label and error message.
 ///
-/// Focus ring uses the accent color. Error state turns the border red.
+/// Uses DUI CSS classes: `.dm-input`, `.dm-input-label`, `.dm-input-error`, etc.
+/// No Tailwind required.
 #[component]
 pub fn Input(
-    /// Input type (text, password, search).
+    /// Input type (text, password, search, email).
     #[prop(default = InputType::Text)]
     input_type: InputType,
     /// Placeholder text.
@@ -51,21 +52,19 @@ pub fn Input(
     class: &'static str,
 ) -> impl IntoView {
     let has_error = move || !error.get().is_empty();
-
     let search_icon = matches!(input_type, InputType::Search);
 
     view! {
-        <div class="flex flex-col gap-1.5 w-full">
-            // Label
+        <div class="dm-flex dm-flex-col dm-gap-2 dm-w-full">
             {label.map(|l| view! {
-                <label class="text-[11px] font-mono font-medium uppercase tracking-[0.05em] text-[var(--dm-text-muted)]">{l}</label>
+                <label class="dm-input-label">{l}</label>
             })}
 
-            // Input wrapper (for search icon)
-            <div class="relative">
+            <div class="dm-input-wrapper">
                 {search_icon.then(|| view! {
                     <svg
-                        class="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--dm-text-dim)] pointer-events-none"
+                        class="dm-input-icon dm-input-icon-left"
+                        style="width:16px;height:16px"
                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                         stroke-width="2" stroke="currentColor"
                     >
@@ -79,11 +78,10 @@ pub fn Input(
                     placeholder=placeholder
                     disabled=disabled
                     class=move || format!(
-                        "w-full bg-[var(--dm-bg)] text-[var(--dm-text)] text-sm border-2 border-[var(--dm-border)] rounded-md px-3 py-2.5 placeholder:text-[var(--dm-text-dim)] transition-all duration-150 focus:outline-none focus:border-[var(--dm-border-focus)] focus:shadow-[var(--dm-ring)] disabled:opacity-40 disabled:cursor-not-allowed {} {} {}",
-                        if has_error() { "border-[var(--dm-unknown)] focus:border-[var(--dm-unknown)] focus:shadow-[0_0_0_2px_var(--dm-bg),0_0_0_4px_var(--dm-unknown)]" }
-                        else { "hover:border-[var(--dm-border-hover)]" },
-                        if search_icon { "pl-10" } else { "" },
-                        class,
+                        "dm-input {} {} {}",
+                        if has_error() { "dm-input-error" } else { "" },
+                        if search_icon { "dm-input-with-icon-left" } else { "" },
+                        if disabled.get() { "dm-input-disabled" } else { "" },
                     )
                     prop:value=move || value.get()
                     on:input=move |ev| {
@@ -92,10 +90,9 @@ pub fn Input(
                 />
             </div>
 
-            // Error message
             <Show when=has_error>
-                <p class="text-xs text-[var(--dm-unknown-text)] flex items-center gap-1">
-                    <svg class="w-3.5 h-3.5 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none"
+                <p class="dm-input-error-text">
+                    <svg style="width:14px;height:14px;flex-shrink:0" xmlns="http://www.w3.org/2000/svg" fill="none"
                          viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round"
                               d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
