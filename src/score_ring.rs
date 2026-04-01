@@ -36,7 +36,7 @@ pub fn ScoreRing(
     };
     let size_str = format!("{}px", size);
     view! {
-        <div class=format!("inline-flex flex-col items-center gap-1 {}", class) role="img" aria-label=format!("Score: {} out of 100{}", clamped, label.as_ref().map(|l| format!(" for {}", l)).unwrap_or_default()) >
+        <div class=format!("dm-inline-flex dm-flex-col dm-items-center dm-gap-1 {}", class) role="img" aria-label=format!("Score: {} out of 100{}", clamped, label.as_ref().map(|l| format!(" for {}", l)).unwrap_or_default()) >
             <svg viewBox="0 0 100 100" style=format!("width: {}; height: {};", size_str, size_str) >
                 <circle cx="50" cy="50" r=format!("{}", radius) fill="none" stroke="var(--dm-border)" stroke-width="8" opacity="0.3" />
                 <circle cx="50" cy="50" r=format!("{}", radius) fill="none" stroke=color stroke-width="8" stroke-linecap="round" stroke-dasharray=format!("{}", circumference) stroke-dashoffset=format!("{}", offset) transform="rotate(-90 50 50)" style="transition: stroke-dashoffset 0.8s ease-out;" />
@@ -45,7 +45,7 @@ pub fn ScoreRing(
                 </text>
             </svg>
             {label.as_ref().map(|l| view! {
-                <span class="font-mono uppercase text-xs font-medium" style="color: var(--dm-text-secondary);" >
+                <span class="dm-label" >
                     {l.clone()}
                 </span>
             })}
