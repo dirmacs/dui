@@ -36,10 +36,7 @@ pub struct CommandItem {
 // ---------------------------------------------------------------------------
 
 /// Inline keycap styling string, matching `kbd.rs`.
-const KBD_CLASS: &str = "inline-flex items-center justify-center \
-    min-w-[20px] h-5 px-1.5 text-[11px] font-mono font-medium leading-none \
-    rounded border bg-[var(--dm-elevated)] text-[var(--dm-text-secondary)] border-[var(--dm-border)] \
-    shadow-[0_1px_0_1px_var(--dm-bg)] select-none";
+const KBD_CLASS: &str = "dm-kbd";
 
 // ---------------------------------------------------------------------------
 // Component
@@ -193,11 +190,7 @@ pub fn CommandPalette(
     view! {
         <div
             class=move || {
-                if open.get() {
-                    "fixed inset-0 z-50 flex items-center justify-center animate-dm-fade-in"
-                } else {
-                    "hidden"
-                }
+                if open.get() { "dm-command-backdrop" } else { "dm-hidden" }
             }
             style="background: rgba(0,0,0,0.60);"
             role="dialog"
@@ -215,15 +208,14 @@ pub fn CommandPalette(
             }
         >
             // Panel
-            <div class="bg-[var(--dm-surface)] border border-[var(--dm-border)] rounded-xl shadow-2xl \
-                        w-full max-w-lg mx-4 flex flex-col overflow-hidden \
-                        animate-dm-scale-in">
+            <div class="dm-command">
 
                 // ---- Search input section ----
-                <div class="flex items-center gap-3 px-4 py-3 border-b border-[var(--dm-border)]">
+                <div class="dm-flex dm-items-center dm-gap-3 dm-px-4 dm-py-3 dm-border-b">
                     // Magnifying glass icon
                     <svg
-                        class="w-5 h-5 text-[var(--dm-text-secondary)] shrink-0"
+                        class="dm-text-secondary dm-shrink-0"
+                        style="width:20px;height:20px"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         viewBox="0 0 24 24"
@@ -248,8 +240,7 @@ pub fn CommandPalette(
                         aria-controls=listbox_id
                         aria-autocomplete="list"
                         aria-activedescendant=move || format!("dm-cmd-opt-{}", active_index.get())
-                        class="flex-1 bg-transparent text-[var(--dm-text)] text-base \
-                               placeholder:text-[var(--dm-text-dim)] outline-none"
+                        class="dm-command-input"
                         prop:value=move || query.get()
                         on:input=move |ev| {
                             query.set(event_target_value(&ev));
@@ -295,17 +286,14 @@ pub fn CommandPalette(
                     id=listbox_id
                     role="listbox"
                     aria-label="Commands"
-                    class="overflow-y-auto overscroll-contain py-2 px-2"
-                    style="max-height: 300px;"
+                    class="dm-command-list"
                 >
                     {move || {
                         let list = filtered.get();
 
                         if list.is_empty() {
                             return view! {
-                                <div class="px-4 py-8 text-center text-sm text-[var(--dm-text-secondary)] select-none">
-                                    "No results found."
-                                </div>
+                                <div class="dm-command-empty">"No results found."</div>
                             }.into_any();
                         }
 
@@ -341,9 +329,7 @@ pub fn CommandPalette(
                                                 view! {
                                                     <div
                                                         id=gid
-                                                        class="text-xs font-semibold text-[var(--dm-text-secondary)] \
-                                                               uppercase tracking-wider px-2 py-1.5 \
-                                                               select-none"
+                                                        class="dm-command-group-heading"
                                                     >
                                                         {name}
                                                     </div>
@@ -364,13 +350,8 @@ pub fn CommandPalette(
                                                         }
                                                         data-dm-cmd-idx=idx.to_string()
                                                         class=move || format!(
-                                                            "px-2 py-2 flex items-center gap-3 rounded-md \
-                                                             cursor-pointer text-sm transition-colors duration-75 {}",
-                                                            if active_index.get() == idx {
-                                                                "bg-[var(--dm-surface-hover)]"
-                                                            } else {
-                                                                ""
-                                                            }
+                                                            "dm-command-item {}",
+                                                            if active_index.get() == idx { "dm-command-item-active" } else { "" }
                                                         )
                                                         on:mouseenter=move |_| {
                                                             active_index.set(idx);
@@ -388,7 +369,8 @@ pub fn CommandPalette(
                                                             let d = path_d.clone();
                                                             view! {
                                                                 <svg
-                                                                    class="w-5 h-5 text-[var(--dm-text-secondary)] shrink-0"
+                                                                    class="dm-text-secondary dm-shrink-0"
+                                                                    style="width:20px;height:20px"
                                                                     xmlns="http://www.w3.org/2000/svg"
                                                                     fill="none"
                                                                     viewBox="0 0 20 20"
@@ -405,14 +387,14 @@ pub fn CommandPalette(
                                                         })}
 
                                                         // Label + description
-                                                        <div class="flex-1 min-w-0">
-                                                            <div class="text-[var(--dm-text)] truncate">
+                                                        <div class="dm-flex-1" style="min-width:0">
+                                                            <div class="dm-command-item-label" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
                                                                 {item.label.clone()}
                                                             </div>
                                                             {item.description.as_ref().map(|desc| {
                                                                 let d = desc.clone();
                                                                 view! {
-                                                                    <div class="text-xs text-[var(--dm-text-dim)] truncate mt-0.5">
+                                                                    <div class="dm-command-item-desc">
                                                                         {d}
                                                                     </div>
                                                                 }
@@ -426,7 +408,7 @@ pub fn CommandPalette(
                                                                 .map(|s| s.to_string())
                                                                 .collect();
                                                             view! {
-                                                                <span class="inline-flex items-center gap-0.5 shrink-0 ml-auto">
+                                                                <span class="dm-command-item-shortcut">
                                                                     {parts.into_iter().map(|k| {
                                                                         view! {
                                                                             <kbd class=KBD_CLASS>{k}</kbd>
@@ -447,19 +429,15 @@ pub fn CommandPalette(
                 </div>
 
                 // ---- Footer: keyboard hints ----
-                <div class="flex items-center gap-4 px-4 py-2.5 border-t border-[var(--dm-border)] \
-                            text-xs text-[var(--dm-text-dim)] select-none">
-                    <span class="inline-flex items-center gap-1">
-                        <kbd class=KBD_CLASS>{"\u{2191}\u{2193}"}</kbd>
-                        " Navigate"
+                <div class="dm-flex dm-items-center dm-gap-4 dm-px-4 dm-py-3 dm-border-t dm-text-xs dm-text-dim dm-select-none">
+                    <span class="dm-inline-flex dm-items-center dm-gap-1">
+                        <kbd class=KBD_CLASS>{"\u{2191}\u{2193}"}</kbd> " Navigate"
                     </span>
-                    <span class="inline-flex items-center gap-1">
-                        <kbd class=KBD_CLASS>{"\u{21B5}"}</kbd>
-                        " Select"
+                    <span class="dm-inline-flex dm-items-center dm-gap-1">
+                        <kbd class=KBD_CLASS>{"\u{21B5}"}</kbd> " Select"
                     </span>
-                    <span class="inline-flex items-center gap-1">
-                        <kbd class=KBD_CLASS>{"Esc"}</kbd>
-                        " Close"
+                    <span class="dm-inline-flex dm-items-center dm-gap-1">
+                        <kbd class=KBD_CLASS>{"Esc"}</kbd> " Close"
                     </span>
                 </div>
             </div>
