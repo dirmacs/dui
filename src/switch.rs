@@ -13,13 +13,8 @@ pub enum SwitchSize {
 
 /// A styled toggle switch with optional label.
 ///
-/// Click or press Space/Enter to toggle. Supports three sizes and a disabled state.
-///
-/// # Example
-/// ```rust
-/// let enabled = RwSignal::new(false);
-/// view! { <Switch checked=enabled label="Enable notifications" /> }
-/// ```
+/// Uses DUI CSS classes: `.dm-switch`, `.dm-switch-track-*`, `.dm-switch-thumb-*`, `.dm-switch-checked`.
+/// No Tailwind required.
 #[component]
 pub fn Switch(
     /// Reactive checked state (two-way binding).
@@ -43,20 +38,20 @@ pub fn Switch(
         }
     };
 
-    let (track_classes, thumb_size, thumb_translate) = match size {
-        SwitchSize::Sm => ("w-8 h-4", "width:14px;height:14px;", "translateX(15px)"),
-        SwitchSize::Md => ("w-10 h-5", "width:18px;height:18px;", "translateX(19px)"),
-        SwitchSize::Lg => ("w-12 h-6", "width:22px;height:22px;", "translateX(23px)"),
+    let track_class = match size {
+        SwitchSize::Sm => "dm-switch-track-sm",
+        SwitchSize::Md => "dm-switch-track-md",
+        SwitchSize::Lg => "dm-switch-track-lg",
+    };
+
+    let thumb_class = match size {
+        SwitchSize::Sm => "dm-switch-thumb dm-switch-thumb-sm",
+        SwitchSize::Md => "dm-switch-thumb dm-switch-thumb-md",
+        SwitchSize::Lg => "dm-switch-thumb dm-switch-thumb-lg",
     };
 
     view! {
-        <div
-            class=format!(
-                "inline-flex items-center gap-2.5 select-none {}",
-                class,
-            )
-        >
-            // Track + Thumb
+        <div class=format!("dm-switch {}", class)>
             <button
                 type="button"
                 role="switch"
@@ -64,13 +59,10 @@ pub fn Switch(
                 aria-disabled=move || if disabled.get() { "true" } else { "false" }
                 aria-label=label.unwrap_or("Toggle")
                 class=move || format!(
-                    "relative inline-flex items-center shrink-0 \
-                     rounded-full transition-colors duration-150 \
-                     dm-focus-ring cursor-pointer \
-                     {} {} {}",
-                    track_classes,
-                    if checked.get() { "bg-dm-accent" } else { "bg-dm-elevated" },
-                    if disabled.get() { "opacity-50 cursor-not-allowed" } else { "" },
+                    "dm-switch-track {} {} {}",
+                    track_class,
+                    if checked.get() { "dm-switch-checked" } else { "" },
+                    if disabled.get() { "dm-opacity-40 dm-cursor-not-allowed" } else { "dm-cursor-pointer" },
                 )
                 disabled=disabled
                 on:click=move |_| toggle()
@@ -82,23 +74,18 @@ pub fn Switch(
                     }
                 }
             >
-                // Thumb circle
-                <span
-                    class="absolute left-[1px] top-1/2 rounded-full bg-white shadow-sm transition-transform duration-150"
-                    style=move || format!(
-                        "{} transform: {} translateY(-50%);",
-                        thumb_size,
-                        if checked.get() { thumb_translate } else { "translateX(0)" },
-                    )
-                ></span>
+                <span class=move || format!(
+                    "{} {}",
+                    thumb_class,
+                    if checked.get() { "dm-switch-checked" } else { "" },
+                )></span>
             </button>
 
-            // Label
             {label.map(|l| view! {
                 <span
                     class=move || format!(
-                        "text-sm text-dm-text {}",
-                        if disabled.get() { "opacity-50 cursor-not-allowed" } else { "cursor-pointer" },
+                        "dm-text-sm dm-text-primary {}",
+                        if disabled.get() { "dm-opacity-40" } else { "dm-cursor-pointer" },
                     )
                     on:click=move |_| toggle()
                 >

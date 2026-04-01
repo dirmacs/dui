@@ -5,17 +5,15 @@ use leptos::prelude::*;
 /// A single tab definition.
 #[derive(Debug, Clone, PartialEq)]
 pub struct TabItem {
-    /// Unique key.
     pub key: String,
-    /// Display label.
     pub label: String,
-    /// Optional count badge (e.g. number of items).
     pub count: Option<usize>,
 }
 
 /// Horizontal tab navigation bar with an animated active indicator.
 ///
-/// The consumer renders the appropriate tab content based on `active_tab`.
+/// Uses DUI CSS classes: `.dm-tabs`, `.dm-tab`, `.dm-tab-active`, `.dm-tab-count`.
+/// No Tailwind required.
 #[component]
 pub fn Tabs(
     /// Tab definitions.
@@ -33,19 +31,12 @@ pub fn Tabs(
     let on_change = std::rc::Rc::new(on_change);
 
     view! {
-        <div
-            role="tablist"
-            class=format!(
-                "flex items-center border-b border-dm gap-1 {}",
-                class
-            )
-        >
+        <div role="tablist" class=format!("dm-tabs {}", class)>
             {items.into_iter().map(|tab| {
                 let key_aria = tab.key.clone();
                 let key_tab = tab.key.clone();
                 let key_class = tab.key.clone();
                 let key2 = tab.key.clone();
-                let key3 = tab.key.clone();
                 let on_change = on_change.clone();
                 view! {
                     <button
@@ -53,16 +44,10 @@ pub fn Tabs(
                         aria-selected=move || (active_tab.get() == key_aria).to_string()
                         tabindex=move || if active_tab.get() == key_tab { "0" } else { "-1" }
                         class=move || format!(
-                            "relative px-4 py-2.5 text-sm font-medium transition-colors duration-150 \
-                             rounded-t-lg -mb-px dm-focus-ring {}",
-                            if active_tab.get() == key_class {
-                                "text-dm-accent"
-                            } else {
-                                "text-dm-muted hover:text-dm-text"
-                            }
+                            "dm-tab {}",
+                            if active_tab.get() == key_class { "dm-tab-active" } else { "" },
                         )
                         on:click={
-                            let key2 = key2.clone();
                             let on_change = on_change.clone();
                             move |_| {
                                 active_tab.set(key2.clone());
@@ -72,22 +57,10 @@ pub fn Tabs(
                             }
                         }
                     >
-                        <span class="flex items-center gap-2">
-                            {tab.label.clone()}
-                            {tab.count.map(|c| view! {
-                                <span class="text-xs bg-dm-elevated text-dm-dim px-1.5 py-0.5 rounded-md">
-                                    {c.to_string()}
-                                </span>
-                            })}
-                        </span>
-
-                        // Active indicator line
-                        <Show when={
-                            let key3 = key3.clone();
-                            move || active_tab.get() == key3
-                        }>
-                            <span class="absolute bottom-0 left-2 right-2 h-0.5 bg-dm-accent rounded-full"></span>
-                        </Show>
+                        {tab.label.clone()}
+                        {tab.count.map(|c| view! {
+                            <span class="dm-tab-count">{c}</span>
+                        })}
                     </button>
                 }
             }).collect::<Vec<_>>()}
