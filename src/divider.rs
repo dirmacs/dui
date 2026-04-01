@@ -12,8 +12,8 @@ pub enum DividerOrientation {
 
 /// A visual separator line (horizontal or vertical) with an optional text label.
 ///
-/// When a label is provided (horizontal only), the divider renders as two lines
-/// with centered text between them: `——— Label ———`.
+/// Uses DUI CSS classes: `.dm-divider`, `.dm-divider-vertical`.
+/// No Tailwind required.
 #[component]
 pub fn Divider(
     /// Horizontal (default) or vertical orientation.
@@ -30,7 +30,7 @@ pub fn Divider(
         DividerOrientation::Vertical => {
             view! {
                 <div
-                    class=format!("w-px bg-dm-border self-stretch {}", class)
+                    class=format!("dm-divider-vertical {}", class)
                     role="separator"
                     aria-orientation="vertical"
                 ></div>
@@ -40,16 +40,15 @@ pub fn Divider(
         DividerOrientation::Horizontal => {
             match label {
                 Some(text) => {
-                    // Line + label + line pattern
                     view! {
                         <div
-                            class=format!("flex items-center w-full {}", class)
+                            class=format!("dm-flex dm-items-center dm-w-full {}", class)
                             role="separator"
                             aria-orientation="horizontal"
                         >
-                            <div class="flex-1 h-px bg-dm-border"></div>
-                            <span class="text-xs text-dm-muted px-3 shrink-0">{text}</span>
-                            <div class="flex-1 h-px bg-dm-border"></div>
+                            <div class="dm-divider dm-grow"></div>
+                            <span class="dm-text-xs dm-text-muted dm-px-3 dm-shrink-0">{text}</span>
+                            <div class="dm-divider dm-grow"></div>
                         </div>
                     }
                     .into_any()
@@ -57,7 +56,7 @@ pub fn Divider(
                 None => {
                     view! {
                         <div
-                            class=format!("h-px w-full bg-dm-border {}", class)
+                            class=format!("dm-divider dm-w-full {}", class)
                             role="separator"
                             aria-orientation="horizontal"
                         ></div>

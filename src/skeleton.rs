@@ -4,24 +4,25 @@ use leptos::prelude::*;
 
 /// A shimmer-animated placeholder block for content that is still loading.
 ///
-/// Use Tailwind dimension classes to control size: `"h-4 w-48"`, `"h-8 w-full"`, etc.
-/// Multiple skeletons can be stacked to simulate text paragraphs or card layouts.
+/// Uses DUI CSS class: `.dm-skeleton`. Control size via `style` prop or extra classes.
+/// No Tailwind required.
 #[component]
 pub fn Skeleton(
-    /// Tailwind classes controlling dimensions and shape.
-    /// Examples: "h-4 w-3/4", "h-10 w-full rounded-full", "h-32 w-full"
-    #[prop(default = "h-4 w-full")]
+    /// Extra CSS classes.
+    #[prop(default = "")]
     class: &'static str,
+    /// Inline style for dimensions (e.g. "height:16px;width:100%").
+    #[prop(default = "height:16px;width:100%")]
+    style: &'static str,
     /// Whether to use a circular shape (for avatars).
     #[prop(default = false)]
     circle: bool,
 ) -> impl IntoView {
     view! {
-        <div class=format!(
-            "dm-skeleton {}{}",
-            if circle { "rounded-full " } else { "" },
-            class
-        )></div>
+        <div
+            class=format!("dm-skeleton {} {}", if circle { "dm-rounded-full" } else { "" }, class)
+            style=style
+        ></div>
     }
 }
 
@@ -33,14 +34,14 @@ pub fn SkeletonText(
     lines: usize,
 ) -> impl IntoView {
     view! {
-        <div class="space-y-3">
+        <div class="dm-flex dm-flex-col dm-gap-3">
             {(0..lines).map(|i| {
                 let width = match i % 3 {
-                    0 => "w-full",
-                    1 => "w-5/6",
-                    _ => "w-2/3",
+                    0 => "100%",
+                    1 => "83%",
+                    _ => "66%",
                 };
-                view! { <div class=format!("dm-skeleton h-4 {}", width)></div> }
+                view! { <div class="dm-skeleton" style=format!("height:16px;width:{}", width)></div> }
             }).collect::<Vec<_>>()}
         </div>
     }
@@ -50,12 +51,12 @@ pub fn SkeletonText(
 #[component]
 pub fn SkeletonCard() -> impl IntoView {
     view! {
-        <div class="bg-[var(--dm-surface)] border border-[var(--dm-border)] rounded-xl overflow-hidden">
-            <div class="dm-skeleton h-40 w-full rounded-none"></div>
-            <div class="p-4 space-y-3">
-                <div class="dm-skeleton h-5 w-2/3"></div>
-                <div class="dm-skeleton h-4 w-full"></div>
-                <div class="dm-skeleton h-4 w-4/5"></div>
+        <div class="dm-card dm-overflow-hidden">
+            <div class="dm-skeleton" style="height:160px;width:100%;border-radius:0"></div>
+            <div class="dm-p-4 dm-flex dm-flex-col dm-gap-3">
+                <div class="dm-skeleton" style="height:20px;width:66%"></div>
+                <div class="dm-skeleton" style="height:16px;width:100%"></div>
+                <div class="dm-skeleton" style="height:16px;width:80%"></div>
             </div>
         </div>
     }

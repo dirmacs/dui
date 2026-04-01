@@ -83,8 +83,8 @@ pub fn Navbar(
     brand_logo_url: Option<&'static str>,
     /// Navigation items (links and dropdowns).
     items: Vec<NavItem>,
-    /// Optional CTA button.
-    #[prop(optional)]
+    /// Optional CTA button. Pass a NavCta directly; omit for no CTA.
+    #[prop(optional, into)]
     cta: Option<NavCta>,
     /// Optional extra CSS classes on the nav element.
     #[prop(default = "")]

@@ -4,12 +4,7 @@ use leptos::prelude::*;
 
 /// A single keyboard key rendered as a styled `<kbd>` element.
 ///
-/// Mimics a physical keycap with a subtle bottom shadow and monospace font.
-///
-/// # Example
-/// ```rust
-/// view! { <Kbd>"⌘"</Kbd> }
-/// ```
+/// Uses DUI CSS class: `.dm-kbd`. No Tailwind required.
 #[component]
 pub fn Kbd(
     /// Extra CSS classes on the `<kbd>` element.
@@ -19,14 +14,7 @@ pub fn Kbd(
     children: Children,
 ) -> impl IntoView {
     view! {
-        <kbd class=format!(
-            "inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 \
-             text-[11px] font-mono font-medium leading-none rounded border \
-             bg-dm-elevated text-dm-muted border-dm \
-             shadow-[0_1px_0_1px_var(--dm-bg)] \
-             select-none {}",
-            class,
-        )>
+        <kbd class=format!("dm-kbd {}", class)>
             {children()}
         </kbd>
     }
@@ -34,10 +22,8 @@ pub fn Kbd(
 
 /// Multiple keyboard keys rendered together as a shortcut combination.
 ///
-/// Each key is wrapped in its own `<Kbd>` element with a small gap between them.
-///
 /// # Example
-/// ```rust
+/// ```rust,ignore
 /// view! { <KbdShortcut keys=vec!["⌘", "K"] /> }
 /// ```
 #[component]
@@ -49,7 +35,7 @@ pub fn KbdShortcut(
     class: &'static str,
 ) -> impl IntoView {
     view! {
-        <span class=format!("inline-flex items-center gap-1 {}", class)>
+        <span class=format!("dm-inline-flex dm-items-center dm-gap-1 {}", class)>
             {keys.into_iter().map(|key| {
                 view! { <Kbd>{key}</Kbd> }
             }).collect::<Vec<_>>()}

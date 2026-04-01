@@ -4,12 +4,8 @@ use leptos::prelude::*;
 
 /// A horizontal progress bar with animated fill and optional label.
 ///
-/// The fill color changes as the bar approaches 100%:
-/// - 0-50%: accent blue
-/// - 50-80%: accent-2 (lighter blue)
-/// - 80-100%: success green
-///
-/// This gives an organic "system warming up" feel.
+/// Uses DUI CSS classes: `.dm-progress`, `.dm-progress-fill`.
+/// No Tailwind required.
 #[component]
 pub fn ProgressBar(
     /// Progress value from 0.0 to 100.0.
@@ -21,9 +17,6 @@ pub fn ProgressBar(
     /// Whether to show the percentage text.
     #[prop(default = true)]
     show_percentage: bool,
-    /// Height class for the bar track (e.g. "h-2", "h-3").
-    #[prop(default = "h-2")]
-    height: &'static str,
     /// Extra CSS classes.
     #[prop(default = "")]
     class: &'static str,
@@ -33,24 +26,24 @@ pub fn ProgressBar(
     let fill_color = move || {
         let v = clamped();
         if v >= 80.0 {
-            "bg-[var(--dm-confirmed)]"
+            "var(--dm-confirmed)"
         } else if v >= 50.0 {
-            "bg-[var(--dm-accent-muted)]"
+            "var(--dm-accent-hover)"
         } else {
-            "bg-[var(--dm-accent)]"
+            "var(--dm-accent)"
         }
     };
 
     view! {
-        <div class=format!("w-full {}", class)>
+        <div class=format!("dm-w-full {}", class)>
             // Label + percentage row
             {(label.is_some() || show_percentage).then(|| view! {
-                <div class="flex items-center justify-between mb-1.5">
+                <div class="dm-flex dm-items-center dm-justify-between dm-mb-2">
                     {label.clone().map(|l| view! {
-                        <span class="text-sm font-medium text-[var(--dm-text-secondary)]">{l}</span>
+                        <span class="dm-text-sm dm-font-medium dm-text-secondary">{l}</span>
                     })}
                     {show_percentage.then(|| view! {
-                        <span class="text-xs font-mono text-[var(--dm-text-dim)]">
+                        <span class="dm-text-xs dm-font-mono dm-text-dim">
                             {move || format!("{:.0}%", clamped())}
                         </span>
                     })}
@@ -63,18 +56,11 @@ pub fn ProgressBar(
                 aria-valuenow=move || format!("{:.0}", clamped())
                 aria-valuemin="0"
                 aria-valuemax="100"
-                class=format!(
-                    "w-full bg-[var(--dm-bg)] border border-[var(--dm-border)] rounded-full overflow-hidden {}",
-                    height
-                )
+                class="dm-progress"
             >
-                // Fill
                 <div
-                    class=move || format!(
-                        "h-full rounded-full transition-all duration-500 ease-out {}",
-                        fill_color()
-                    )
-                    style=move || format!("width: {}%", clamped())
+                    class="dm-progress-fill"
+                    style=move || format!("width:{}%;background:{}", clamped(), fill_color())
                 ></div>
             </div>
         </div>

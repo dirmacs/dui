@@ -16,7 +16,8 @@ pub enum BadgeColor {
 
 /// A small inline tag/label with a colored background.
 ///
-/// Useful for statuses, counts, categories, tags.
+/// Uses DUI CSS classes: `.dm-badge`, `.dm-badge-gray`, etc.
+/// No Tailwind required.
 #[component]
 pub fn Badge(
     /// Color variant.
@@ -28,21 +29,17 @@ pub fn Badge(
     /// Badge text content.
     children: Children,
 ) -> impl IntoView {
-    let color_classes = match color {
-        BadgeColor::Gray   => "bg-[var(--dm-surface)] text-[var(--dm-text-secondary)] border-2 border-[var(--dm-border)]",
-        BadgeColor::Blue   => "bg-[var(--dm-accent-muted)] text-[var(--dm-accent)] border-2 border-[var(--dm-accent-border)]",
-        BadgeColor::Green  => "bg-[var(--dm-confirmed-muted)] text-[var(--dm-confirmed-text)] border-2 border-[var(--dm-confirmed-border)]",
-        BadgeColor::Yellow => "bg-[var(--dm-inferred-muted)] text-[var(--dm-inferred-text)] border-2 border-[var(--dm-inferred-border)]",
-        BadgeColor::Red    => "bg-[var(--dm-unknown-muted)] text-[var(--dm-unknown-text)] border-2 border-[var(--dm-unknown-border)]",
-        BadgeColor::Purple => "bg-[var(--dm-purple-muted)] text-[var(--dm-purple)] border-2 border-[var(--dm-purple-border)]",
+    let color_class = match color {
+        BadgeColor::Gray   => "dm-badge-gray",
+        BadgeColor::Blue   => "dm-badge-blue",
+        BadgeColor::Green  => "dm-badge-green",
+        BadgeColor::Yellow => "dm-badge-yellow",
+        BadgeColor::Red    => "dm-badge-red",
+        BadgeColor::Purple => "dm-badge-purple",
     };
 
     view! {
-        <span class=format!(
-            "inline-flex items-center px-2 py-0.5 text-xs font-medium \
-             rounded-md border {} {}",
-            color_classes, class
-        )>
+        <span class=format!("dm-badge {} {}", color_class, class)>
             {children()}
         </span>
     }
