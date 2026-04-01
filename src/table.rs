@@ -14,28 +14,23 @@ pub enum SortDir {
 /// A column definition.
 #[derive(Debug, Clone)]
 pub struct TableColumn {
-    /// Unique key.
     pub key: String,
-    /// Display header text.
     pub label: String,
-    /// Whether the column is sortable.
     pub sortable: bool,
-    /// Optional width class (e.g. "w-48", "w-1/3").
     pub width: Option<String>,
 }
 
 /// A data table with sortable column headers and hover-highlighted rows.
 ///
-/// Rows are passed as `Vec<Vec<View>>` — each inner vec maps 1:1 to columns.
-/// Sorting is signal-based: when a sortable header is clicked, `on_sort` fires
-/// with the column key and new direction. The consumer re-sorts their data.
+/// Uses DUI CSS classes: `.dm-table`, `.dm-table-header`, `.dm-table-row`, `.dm-table-cell`, `.dm-table-sort`.
+/// No Tailwind required.
 #[component]
 pub fn Table(
     /// Column definitions.
     columns: Vec<TableColumn>,
     /// Row data. Each inner Vec has one element per column.
     rows: Signal<Vec<Vec<String>>>,
-    /// Currently sorted column key (empty = no sort).
+    /// Currently sorted column key.
     #[prop(optional, into)]
     sort_key: RwSignal<String>,
     /// Current sort direction.
@@ -51,25 +46,23 @@ pub fn Table(
     let on_sort = std::rc::Rc::new(on_sort);
 
     view! {
-        <div class=format!("w-full overflow-x-auto rounded-lg border border-[var(--dm-border)] {}", class)>
-            <table class="w-full text-sm text-left">
-                // Header
-                <thead class="bg-[var(--dm-elevated)]">
+        <div class=format!("dm-table-overflow {}", class)>
+            <table class="dm-table">
+                <thead class="dm-table-header">
                     <tr>
                         {columns.iter().map(|col| {
                             let key = col.key.clone();
                             let key2 = col.key.clone();
                             let sortable = col.sortable;
                             let on_sort = on_sort.clone();
-                            let width = col.width.clone().unwrap_or_default();
+                            let width_style = col.width.clone().map(|w| format!("width:{}", w)).unwrap_or_default();
                             view! {
                                 <th
                                     class=move || format!(
-                                        "px-4 py-3 text-xs font-semibold uppercase tracking-wider \
-                                         text-[var(--dm-text-secondary)] border-b border-[var(--dm-border)] {} {}",
-                                        width,
-                                        if sortable { "cursor-pointer select-none hover:text-[var(--dm-text)] transition-colors" } else { "" },
+                                        "{}",
+                                        if sortable { "dm-table-sort" } else { "" },
                                     )
+                                    style=width_style.clone()
                                     on:click={
                                         let key = key.clone();
                                         let on_sort = on_sort.clone();
@@ -93,54 +86,32 @@ pub fn Table(
                                         }
                                     }
                                 >
-                                    <span class="flex items-center gap-1.5">
-                                        {col.label.clone()}
-                                        {sortable.then(|| {
-                                            let key2 = key2.clone();
-                                            let key2_for_compare = key2.clone();
-                                            view! {
-                                                <span class=move || {
-                                                    if sort_key.get() == key2_for_compare {
-                                                        "text-[var(--dm-accent)]"
-                                                    } else {
-                                                        "text-[var(--dm-text-dim)]"
-                                                    }
-                                                }>
-                                                    {move || {
-                                                        let k = key2.clone();
-                                                        if sort_key.get() == k {
-                                                            match sort_dir.get() {
-                                                                SortDir::Asc  => "\u{2191}",
-                                                                SortDir::Desc => "\u{2193}",
-                                                                SortDir::None => "\u{2195}",
-                                                            }
-                                                        } else {
-                                                            "\u{2195}"
-                                                        }
-                                                    }}
-                                                </span>
+                                    {col.label.clone()}
+                                    {sortable.then(|| {
+                                        let indicator = move || {
+                                            if sort_key.get() == key2 {
+                                                match sort_dir.get() {
+                                                    SortDir::Asc  => " \u{2191}",
+                                                    SortDir::Desc => " \u{2193}",
+                                                    SortDir::None => " \u{2195}",
+                                                }
+                                            } else {
+                                                " \u{2195}"
                                             }
-                                        })}
-                                    </span>
+                                        };
+                                        view! { <span class="dm-text-muted">{indicator}</span> }
+                                    })}
                                 </th>
                             }
                         }).collect::<Vec<_>>()}
                     </tr>
                 </thead>
-
-                // Body
                 <tbody>
-                    {move || rows.get().into_iter().enumerate().map(|(row_idx, cells)| {
+                    {move || rows.get().iter().map(|row| {
                         view! {
-                            <tr class=format!(
-                                "border-b border-[var(--dm-border)] last:border-0 \
-                                 hover:bg-[var(--dm-surface-hover)]/50 transition-colors duration-100 {}",
-                                if row_idx % 2 == 1 { "bg-[var(--dm-bg)]/30" } else { "" }
-                            )>
-                                {cells.into_iter().map(|cell| {
-                                    view! {
-                                        <td class="px-4 py-3 text-[var(--dm-text)]">{cell}</td>
-                                    }
+                            <tr class="dm-table-row">
+                                {row.iter().map(|cell| {
+                                    view! { <td class="dm-table-cell">{cell.clone()}</td> }
                                 }).collect::<Vec<_>>()}
                             </tr>
                         }
