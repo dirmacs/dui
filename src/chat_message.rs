@@ -1,3 +1,5 @@
+//! ChatMessage — chat bubble with sender-based styling.
+
 use leptos::prelude::*;
 
 /// Chat message sender type.
@@ -7,23 +9,17 @@ pub enum ChatSender {
     User,
 }
 
-/// A single chat message bubble with sender-based styling.
+/// A single chat message bubble.
 ///
-/// System messages appear on the left with muted background.
-/// User messages appear on the right with accent background.
-///
-/// When `html` is true, system messages render content via `inner_html`
-/// (for pre-converted markdown). User messages always render as text.
-///
-/// Messages animate in with a directional slide (left for system, right for user)
-/// via the `dm-msg-system` / `dm-msg-user` CSS classes.
+/// Uses DUI CSS classes + inline styles for bubble variants.
+/// No Tailwind required.
 #[component]
 pub fn ChatMessage(
     /// Who sent this message.
     sender: ChatSender,
-    /// Message text content (plain text or HTML when `html` is true).
+    /// Message text content.
     content: String,
-    /// Render system message content as HTML (e.g. pre-converted markdown).
+    /// Render system message content as HTML.
     #[prop(default = false)]
     html: bool,
     /// Extra CSS classes.
@@ -32,27 +28,21 @@ pub fn ChatMessage(
 ) -> impl IntoView {
     let is_user = sender == ChatSender::User;
     let use_html = html && !is_user;
-    let anim_class = if is_user { "dm-msg-user" } else { "dm-msg-system" };
-    let bubble_class = format!(
-        "px-4 py-2.5 rounded-lg text-sm leading-relaxed {}",
-        if is_user {
-            "border-2 border-[var(--dm-accent)] bg-[var(--dm-accent-muted)] text-[var(--dm-text)] rounded-br-sm"
-        } else {
-            "border-2 border-[var(--dm-border)] border-l-4 border-l-[var(--dm-accent)] bg-[var(--dm-surface)] text-[var(--dm-text)] rounded-bl-sm"
-        }
-    );
+
+    let bubble_style = if is_user {
+        "padding:10px 16px;border-radius:var(--dm-radius-lg);border-bottom-right-radius:2px;font-size:14px;line-height:1.6;max-width:600px;border:2px solid var(--dm-accent);background:var(--dm-accent-muted);color:var(--dm-text)"
+    } else {
+        "padding:10px 16px;border-radius:var(--dm-radius-lg);border-bottom-left-radius:2px;font-size:14px;line-height:1.6;max-width:600px;border:2px solid var(--dm-border);border-left:4px solid var(--dm-accent);background:var(--dm-surface);color:var(--dm-text)"
+    };
+
+    let justify = if is_user { "dm-justify-end" } else { "dm-justify-start" };
+
     view! {
-        <div class=format!(
-            "flex {} {} {}",
-            if is_user { "justify-end" } else { "justify-start" },
-            anim_class,
-            class
-        )>
+        <div class=format!("dm-flex {} {}", justify, class)>
             {if use_html {
-                let cls = bubble_class.clone();
-                view! { <div class=cls style="max-width: 600px" inner_html=content /> }.into_any()
+                view! { <div style=bubble_style inner_html=content /> }.into_any()
             } else {
-                view! { <div class=bubble_class style="max-width: 600px">{content}</div> }.into_any()
+                view! { <div style=bubble_style>{content}</div> }.into_any()
             }}
         </div>
     }

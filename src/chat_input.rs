@@ -1,19 +1,22 @@
+//! ChatInput — chat input with textarea and send button.
+
 use leptos::prelude::*;
 use wasm_bindgen::JsCast;
 
 /// Chat input with textarea and send button.
 ///
-/// Enter to send, Shift+Enter for newline. Send button shows loading state.
+/// Uses DUI CSS classes: `.dm-textarea`, `.dm-btn`, `.dm-btn-primary`.
+/// No Tailwind required.
 #[component]
 pub fn ChatInput(
-    /// Reactive message value (two-way binding).
+    /// Reactive message value.
     value: RwSignal<String>,
     /// Called when user sends a message.
     on_send: Box<dyn Fn(String) + 'static>,
     /// Placeholder text.
     #[prop(default = "Type a message...")]
     placeholder: &'static str,
-    /// Loading state (disables input during send).
+    /// Loading state.
     #[prop(optional, into)]
     loading: Signal<bool>,
     /// Extra CSS classes.
@@ -25,12 +28,13 @@ pub fn ChatInput(
     let on_send_key = on_send.clone();
 
     view! {
-        <div class=format!("flex items-end gap-2 p-2 border-t border-[var(--dm-border)] {}", class)>
+        <div class=format!("dm-flex dm-items-end dm-gap-2 dm-p-2 dm-border-t {}", class)>
             <textarea
                 rows="1"
                 placeholder=placeholder
                 disabled=move || loading.get()
-                class="flex-1 resize-none rounded-md px-3 py-2 text-sm bg-[var(--dm-surface)] text-[var(--dm-text)] border-2 border-[var(--dm-border)] focus:outline-none focus:ring-2 focus:ring-[var(--dm-accent)] disabled:opacity-50 input-glow"
+                class="dm-textarea dm-flex-1"
+                style="resize:none;min-height:40px"
                 prop:value=move || value.get()
                 on:input=move |ev| {
                     let target = ev.target().unwrap();
@@ -51,7 +55,8 @@ pub fn ChatInput(
             <button
                 type="button"
                 disabled=move || loading.get() || value.get().trim().is_empty()
-                class="px-4 py-2 rounded-lg text-sm font-medium bg-[var(--dm-accent)] text-white hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed min-h-[40px] btn-press"
+                class="dm-btn dm-btn-primary"
+                style="min-height:40px"
                 on:click=move |_| {
                     let msg = value.get().trim().to_string();
                     if !msg.is_empty() && !loading.get() {

@@ -10,11 +10,14 @@ pub struct SelectOption {
 }
 
 /// A styled dropdown select with optional placeholder.
+///
+/// Uses DUI CSS classes: `.dm-input` (shared with Input), `.dm-input-label`.
+/// No Tailwind required.
 #[component]
 pub fn Select(
     /// Available options.
     options: Vec<SelectOption>,
-    /// Currently selected value (empty string = nothing selected).
+    /// Currently selected value.
     #[prop(into)]
     value: RwSignal<String>,
     /// Placeholder shown when nothing is selected.
@@ -31,27 +34,16 @@ pub fn Select(
     class: &'static str,
 ) -> impl IntoView {
     view! {
-        <div class="flex flex-col gap-1.5 w-full">
+        <div class="dm-flex dm-flex-col dm-gap-2 dm-w-full">
             {label.map(|l| view! {
-                <label class="font-mono text-[11px] font-medium uppercase tracking-[0.05em] text-[var(--dm-text-secondary)]">{l}</label>
+                <label class="dm-input-label">{l}</label>
             })}
-
-            <div class="relative">
+            <div class="dm-relative">
                 <select
-                    class=format!(
-                        "w-full bg-[var(--dm-surface)] text-[var(--dm-text)] text-sm appearance-none \
-                         border-2 border-[var(--dm-border)] hover:border-[var(--dm-border-hover)] rounded-md px-3 py-2.5 pr-10 \
-                         transition-all duration-150 \
-                         focus:outline-none focus:border-[var(--dm-accent)] \
-                         focus:shadow-[0_0_0_3px_rgba(79,124,255,0.15)] \
-                         disabled:opacity-50 disabled:cursor-not-allowed \
-                         cursor-pointer {}",
-                        class
-                    )
+                    class=format!("dm-input dm-cursor-pointer {}", class)
+                    style="appearance:none;padding-right:40px"
                     disabled=disabled
-                    on:change=move |ev| {
-                        value.set(event_target_value(&ev));
-                    }
+                    on:change=move |ev| { value.set(event_target_value(&ev)); }
                     prop:value=move || value.get()
                 >
                     <option value="" disabled=true selected=move || value.get().is_empty()>
@@ -61,19 +53,15 @@ pub fn Select(
                         let val = opt.value.clone();
                         let val2 = opt.value.clone();
                         view! {
-                            <option
-                                value=val
-                                selected=move || value.get() == val2
-                            >
+                            <option value=val selected=move || value.get() == val2>
                                 {opt.label}
                             </option>
                         }
                     }).collect::<Vec<_>>()}
                 </select>
-
-                // Chevron icon
                 <svg
-                    class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--dm-text-secondary)] pointer-events-none"
+                    class="dm-input-icon dm-input-icon-right"
+                    style="width:16px;height:16px"
                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                     stroke-width="2" stroke="currentColor"
                 >
