@@ -17,6 +17,9 @@ pub fn ProgressBar(
     /// Whether to show the percentage text.
     #[prop(default = true)]
     show_percentage: bool,
+    /// Height (CSS value, ignored if empty — defaults to 6px from dm-progress class).
+    #[prop(default = "")]
+    height: &'static str,
     /// Extra CSS classes.
     #[prop(default = "")]
     class: &'static str,
