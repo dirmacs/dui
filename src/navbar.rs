@@ -104,14 +104,14 @@ pub fn Navbar(
                             let children = item.children.clone();
                             let label = item.label.clone();
                             view! {
-                                <div class="dm-relative" style="display:inline-block">
+                                <div class="dm-nav-dropdown" style="display:inline-block">
                                     <span class="dm-nav-links dm-cursor-pointer" style="display:flex;align-items:center;gap:4px;color:var(--dm-text-secondary)">
                                         {label}
                                         <svg style="width:12px;height:12px;opacity:0.5" viewBox="0 0 12 12" fill="currentColor">
                                             <path d="M2.5 4.5L6 8l3.5-3.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
                                         </svg>
                                     </span>
-                                    <div class="dm-dropdown-menu" style="position:absolute;top:calc(100% + 12px);left:-16px;min-width:280px;opacity:0;pointer-events:none;transform:translateY(-8px);transition:all 0.2s ease">
+                                    <div class="dm-dropdown-menu" style="position:absolute;top:100%;left:-16px;min-width:280px;padding-top:12px;opacity:0;pointer-events:none;transform:translateY(-8px);transition:all 0.2s ease">
                                         {children.iter().map(|child| {
                                             let href = child.href.clone();
                                             let label = child.label.clone();
