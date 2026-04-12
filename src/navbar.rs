@@ -161,13 +161,23 @@ pub fn Navbar(
             <div class="dm-nav-mobile open">
                 {items_mobile.iter().flat_map(|item| {
                     if item.is_dropdown() {
-                        item.children.iter().map(|child| {
+                        let children = item.children.clone();
+                        let group_label = item.label.clone();
+                        let mut elements = vec![
+                            view! {
+                                <span style="font-family:var(--dm-font-body);font-size:13px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:var(--dm-text-muted);margin-top:0.5rem">
+                                    {group_label}
+                                </span>
+                            }.into_any()
+                        ];
+                        elements.extend(children.iter().map(|child| {
                             let href = child.href.clone();
                             let label = child.label.clone();
                             view! {
                                 <a href=href class="dm-no-underline dm-text-secondary" style="font-size:20px" on:click=move |_| mobile_open.set(false)>{label}</a>
                             }.into_any()
-                        }).collect::<Vec<_>>()
+                        }));
+                        elements
                     } else {
                         let href = item.href.clone().unwrap_or_default();
                         let label = item.label.clone();
