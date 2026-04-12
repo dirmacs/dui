@@ -98,7 +98,7 @@ pub fn Navbar(
                 <div class="dm-nav-links dm-md-hidden-up" style="display:none">
                     // Hidden on mobile via CSS
                 </div>
-                <div class="dm-nav-links" style="display:flex">
+                <div class="dm-nav-links">
                     {items.iter().map(|item| {
                         if item.is_dropdown() {
                             let children = item.children.clone();
@@ -138,7 +138,7 @@ pub fn Navbar(
                     }).collect::<Vec<_>>()}
                 </div>
 
-                <div class="dm-nav-right" style="display:flex;align-items:center;gap:1rem">
+                <div class="dm-nav-right">
                     {cta.map(|c| {
                         let href = c.href.clone();
                         let label = c.label.clone();
