@@ -156,15 +156,20 @@ pub fn Navbar(
                                     <div
                                         class="dm-dropdown-menu"
                                         style=move || if open.get() {
-                                            // Open: 200ms ease-in for deliberate reveals.
+                                            // Open: 200ms ease-in. animation:none suppresses the
+                                            // dm-slide-down CSS class animation which has higher
+                                            // cascade priority than inline styles and would flash
+                                            // the menu visible on every page mount otherwise.
                                             "position:absolute;top:100%;left:-16px;min-width:280px;padding-top:12px;\
                                              opacity:1;pointer-events:auto;transform:translateY(0);\
-                                             transition:opacity 0.2s ease,transform 0.2s ease"
+                                             transition:opacity 0.2s ease,transform 0.2s ease;animation:none"
                                         } else {
-                                            // Closed: 80ms fast-out so close feels snappy.
+                                            // Closed: 80ms fast-out. animation:none is the critical
+                                            // line — without it the CSS animation overrides opacity:0
+                                            // and flashes the dropdown on every page load/remount.
                                             "position:absolute;top:100%;left:-16px;min-width:280px;padding-top:12px;\
                                              opacity:0;pointer-events:none;transform:translateY(-8px);\
-                                             transition:opacity 0.08s ease,transform 0.08s ease"
+                                             transition:opacity 0.08s ease,transform 0.08s ease;animation:none"
                                         }
                                     >
                                         {children.iter().map(|child| {
