@@ -1,5 +1,8 @@
 //! Navbar — horizontal top navigation for public-facing pages.
 //! Fixed position, transparent → glass blur on scroll, mobile hamburger, dropdown support.
+//!
+//! Dropdowns are controlled via Leptos signals (not CSS :hover) so they never
+//! flash during route transitions or component remounts.
 
 use leptos::prelude::*;
 
@@ -103,15 +106,67 @@ pub fn Navbar(
                         if item.is_dropdown() {
                             let children = item.children.clone();
                             let label = item.label.clone();
+
+                            // Signal-based open state: never driven by CSS :hover so the
+                            // dropdown cannot flash during route transitions or remounts.
+                            let open = RwSignal::new(false);
+                            // Store the raw setTimeout handle (i32 is Send+Sync; -1 = no pending).
+                            // gloo_timers::Timeout is !Send so we manage the timer ID directly.
+                            let pending_id: StoredValue<i32> = StoredValue::new(-1);
+
                             view! {
-                                <div class="dm-nav-dropdown" style="display:inline-block">
+                                <div
+                                    class="dm-nav-dropdown"
+                                    style="display:inline-block;position:relative"
+                                    on:mouseenter=move |_| {
+                                        use wasm_bindgen::closure::Closure;
+                                        use wasm_bindgen::JsCast;
+                                        let win = web_sys::window().unwrap();
+                                        // Cancel any previous pending timer before scheduling a new one.
+                                        let old = pending_id.get_value();
+                                        if old >= 0 { win.clear_timeout_with_handle(old); }
+                                        // Schedule open after 120ms — prevents drive-by cursor flash.
+                                        // Closure::forget() is safe for one-shot short-lived timers:
+                                        // the browser holds the ref, fires it once, then GC's it.
+                                        let cb = Closure::<dyn Fn()>::new(move || open.set(true));
+                                        let id = win
+                                            .set_timeout_with_callback_and_timeout_and_arguments_0(
+                                                cb.as_ref().unchecked_ref(), 120,
+                                            )
+                                            .unwrap_or(-1);
+                                        cb.forget();
+                                        pending_id.set_value(id);
+                                    }
+                                    on:mouseleave=move |_| {
+                                        // Cancel pending open timer if still counting down.
+                                        let id = pending_id.get_value();
+                                        if id >= 0 {
+                                            web_sys::window().unwrap().clear_timeout_with_handle(id);
+                                            pending_id.set_value(-1);
+                                        }
+                                        open.set(false);
+                                    }
+                                >
                                     <span class="dm-nav-links dm-cursor-pointer" style="display:flex;align-items:center;gap:4px;color:var(--dm-text-secondary)">
                                         {label}
                                         <svg style="width:12px;height:12px;opacity:0.5" viewBox="0 0 12 12" fill="currentColor">
                                             <path d="M2.5 4.5L6 8l3.5-3.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
                                         </svg>
                                     </span>
-                                    <div class="dm-dropdown-menu" style="position:absolute;top:100%;left:-16px;min-width:280px;padding-top:12px;opacity:0;pointer-events:none;transform:translateY(-8px);transition:all 0.2s ease">
+                                    <div
+                                        class="dm-dropdown-menu"
+                                        style=move || if open.get() {
+                                            // Open: 200ms ease-in for deliberate reveals.
+                                            "position:absolute;top:100%;left:-16px;min-width:280px;padding-top:12px;\
+                                             opacity:1;pointer-events:auto;transform:translateY(0);\
+                                             transition:opacity 0.2s ease,transform 0.2s ease"
+                                        } else {
+                                            // Closed: 80ms fast-out so close feels snappy.
+                                            "position:absolute;top:100%;left:-16px;min-width:280px;padding-top:12px;\
+                                             opacity:0;pointer-events:none;transform:translateY(-8px);\
+                                             transition:opacity 0.08s ease,transform 0.08s ease"
+                                        }
+                                    >
                                         {children.iter().map(|child| {
                                             let href = child.href.clone();
                                             let label = child.label.clone();

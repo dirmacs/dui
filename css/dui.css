@@ -107,13 +107,10 @@ body::before {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
   .dm-fade-in { opacity: 1 !important; transform: none !important; transition: none !important; }
 }
-/* Navbar dropdown hover reveal.
-   120ms open delay prevents drive-by flashes when the cursor crosses
-   a trigger while moving to another nav item. Close is instant (the
-   delay rule only applies while the parent is :hovered, so on leave
-   transition-delay reverts to 0 from the inline transition:all 0.2s). */
+/* Navbar dropdown: controlled via Leptos signals in navbar.rs.
+   No CSS :hover rule — visibility driven entirely by open RwSignal<bool>
+   so dropdowns never flash during route transitions or remounts. */
 .dm-nav-dropdown { position: relative; }
-.dm-nav-dropdown:hover .dm-dropdown-menu { opacity: 1 !important; pointer-events: auto !important; transform: translateY(0) !important; transition-delay: 120ms !important; }
 .dm-display { font-family: var(--dm-font-display); font-weight: 400; line-height: 1.1; letter-spacing: -0.02em; }
 .dm-display-italic { font-family: var(--dm-font-display); font-style: italic; font-weight: 400; }
 .dm-mono { font-family: var(--dm-font-mono); font-size: 0.9em; letter-spacing: -0.02em; }

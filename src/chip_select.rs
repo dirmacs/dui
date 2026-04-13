@@ -29,10 +29,19 @@ pub fn ChipSelect(
         let mut current = selected.get();
         if let Some(pos) = current.iter().position(|s| *s == option) {
             current.remove(pos);
-        } else {
-            if let Some(max_sel) = max {
-                if current.len() >= max_sel { return; }
+        } else if let Some(max_sel) = max {
+            if current.len() >= max_sel {
+                // max=1: replace selection so users can switch chips without deselecting first.
+                if max_sel == 1 {
+                    current.clear();
+                    current.push(option);
+                } else {
+                    return;
+                }
+            } else {
+                current.push(option);
             }
+        } else {
             current.push(option);
         }
         selected.set(current);
