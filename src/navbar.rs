@@ -16,12 +16,29 @@ pub struct NavItem {
 
 impl NavItem {
     pub fn link(label: &str, href: &str) -> Self {
-        Self { label: label.to_string(), href: Some(href.to_string()), children: vec![] }
+        Self {
+            label: label.to_string(),
+            href: Some(href.to_string()),
+            children: vec![],
+        }
     }
     pub fn dropdown(label: &str, children: Vec<NavDropdownItem>) -> Self {
-        Self { label: label.to_string(), href: None, children }
+        Self {
+            label: label.to_string(),
+            href: None,
+            children,
+        }
     }
-    pub fn is_dropdown(&self) -> bool { !self.children.is_empty() }
+    pub fn dropdown_with_link(label: &str, href: &str, children: Vec<NavDropdownItem>) -> Self {
+        Self {
+            label: label.to_string(),
+            href: Some(href.to_string()),
+            children,
+        }
+    }
+    pub fn is_dropdown(&self) -> bool {
+        !self.children.is_empty()
+    }
 }
 
 /// A child item inside a dropdown menu.
@@ -34,7 +51,11 @@ pub struct NavDropdownItem {
 
 impl NavDropdownItem {
     pub fn new(label: &str, description: &str, href: &str) -> Self {
-        Self { label: label.to_string(), description: description.to_string(), href: href.to_string() }
+        Self {
+            label: label.to_string(),
+            description: description.to_string(),
+            href: href.to_string(),
+        }
     }
 }
 
@@ -47,7 +68,10 @@ pub struct NavCta {
 
 impl NavCta {
     pub fn new(label: &str, href: &str) -> Self {
-        Self { label: label.to_string(), href: href.to_string() }
+        Self {
+            label: label.to_string(),
+            href: href.to_string(),
+        }
     }
 }
 
@@ -58,13 +82,10 @@ impl NavCta {
 #[component]
 pub fn Navbar(
     brand_name: &'static str,
-    #[prop(optional)]
-    brand_logo_url: Option<&'static str>,
+    #[prop(optional)] brand_logo_url: Option<&'static str>,
     items: Vec<NavItem>,
-    #[prop(optional, into)]
-    cta: Option<NavCta>,
-    #[prop(default = "")]
-    class: &'static str,
+    #[prop(optional, into)] cta: Option<NavCta>,
+    #[prop(default = "")] class: &'static str,
 ) -> impl IntoView {
     let scrolled = RwSignal::new(false);
     let mobile_open = RwSignal::new(false);
@@ -77,7 +98,8 @@ pub fn Navbar(
             let y = web_sys::window().unwrap().scroll_y().unwrap_or(0.0);
             scrolled.set(y > 10.0);
         });
-        win.add_event_listener_with_callback("scroll", cb.as_ref().unchecked_ref()).ok();
+        win.add_event_listener_with_callback("scroll", cb.as_ref().unchecked_ref())
+            .ok();
         cb.forget();
     });
 
@@ -114,45 +136,59 @@ pub fn Navbar(
                             // gloo_timers::Timeout is !Send so we manage the timer ID directly.
                             let pending_id: StoredValue<i32> = StoredValue::new(-1);
 
+                view! {
+                    <div
+                        class="dm-nav-dropdown"
+                        style="display:inline-block;position:relative"
+                        on:mouseenter=move |_| {
+                            use wasm_bindgen::closure::Closure;
+                            use wasm_bindgen::JsCast;
+                            let win = web_sys::window().unwrap();
+                            // Cancel any previous pending timer before scheduling a new one.
+                            let old = pending_id.get_value();
+                            if old >= 0 { win.clear_timeout_with_handle(old); }
+                            // Schedule open after 120ms — prevents drive-by cursor flash.
+                            // Closure::forget() is safe for one-shot short-lived timers:
+                            // the browser holds the ref, fires it once, then GC's it.
+                            let cb = Closure::<dyn Fn()>::new(move || open.set(true));
+                            let id = win
+                                .set_timeout_with_callback_and_timeout_and_arguments_0(
+                                    cb.as_ref().unchecked_ref(),
+                                    120,
+                                )
+                                .unwrap_or(-1);
+                            cb.forget();
+                            pending_id.set_value(id);
+                        }
+                        on:mouseleave=move |_| {
+                            // Cancel pending open timer if still counting down.
+                            let id = pending_id.get_value();
+                            if id >= 0 {
+                                web_sys::window().unwrap().clear_timeout_with_handle(id);
+                                pending_id.set_value(-1);
+                            }
+                            open.set(false);
+                        }
+                    >
+                        {if item.href.is_some() {
                             view! {
-                                <div
-                                    class="dm-nav-dropdown"
-                                    style="display:inline-block;position:relative"
-                                    on:mouseenter=move |_| {
-                                        use wasm_bindgen::closure::Closure;
-                                        use wasm_bindgen::JsCast;
-                                        let win = web_sys::window().unwrap();
-                                        // Cancel any previous pending timer before scheduling a new one.
-                                        let old = pending_id.get_value();
-                                        if old >= 0 { win.clear_timeout_with_handle(old); }
-                                        // Schedule open after 120ms — prevents drive-by cursor flash.
-                                        // Closure::forget() is safe for one-shot short-lived timers:
-                                        // the browser holds the ref, fires it once, then GC's it.
-                                        let cb = Closure::<dyn Fn()>::new(move || open.set(true));
-                                        let id = win
-                                            .set_timeout_with_callback_and_timeout_and_arguments_0(
-                                                cb.as_ref().unchecked_ref(), 120,
-                                            )
-                                            .unwrap_or(-1);
-                                        cb.forget();
-                                        pending_id.set_value(id);
-                                    }
-                                    on:mouseleave=move |_| {
-                                        // Cancel pending open timer if still counting down.
-                                        let id = pending_id.get_value();
-                                        if id >= 0 {
-                                            web_sys::window().unwrap().clear_timeout_with_handle(id);
-                                            pending_id.set_value(-1);
-                                        }
-                                        open.set(false);
-                                    }
-                                >
-                                    <span class="dm-nav-links dm-cursor-pointer" style="display:flex;align-items:center;gap:4px;color:var(--dm-text-secondary)">
-                                        {label}
-                                        <svg style="width:12px;height:12px;opacity:0.5" viewBox="0 0 12 12" fill="currentColor">
-                                            <path d="M2.5 4.5L6 8l3.5-3.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                                        </svg>
-                                    </span>
+                                <a href=item.href.clone().unwrap() class="dm-nav-links dm-cursor-pointer dm-no-underline" style="display:flex;align-items:center;gap:4px;color:var(--dm-text-secondary)">
+                                    {label}
+                                    <svg style="width:12px;height:12px;opacity:0.5" viewBox="0 0 12 12" fill="currentColor">
+                                        <path d="M2.5 4.5L6 8l3.5-3.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </a>
+                            }.into_any()
+                        } else {
+                            view! {
+                                <span class="dm-nav-links dm-cursor-pointer" style="display:flex;align-items:center;gap:4px;color:var(--dm-text-secondary)">
+                                    {label}
+                                    <svg style="width:12px;height:12px;opacity:0.5" viewBox="0 0 12 12" fill="currentColor">
+                                        <path d="M2.5 4.5L6 8l3.5-3.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </span>
+                            }.into_any()
+                        }}
                                     <div
                                         class="dm-dropdown-menu"
                                         style=move || if open.get() {
@@ -219,33 +255,45 @@ pub fn Navbar(
         // Mobile menu
         <Show when=move || mobile_open.get()>
             <div class="dm-nav-mobile open">
-                {items_mobile.iter().flat_map(|item| {
-                    if item.is_dropdown() {
-                        let children = item.children.clone();
-                        let group_label = item.label.clone();
-                        let mut elements = vec![
-                            view! {
-                                <span style="font-family:var(--dm-font-body);font-size:13px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:var(--dm-text-muted);margin-top:0.5rem">
-                                    {group_label}
-                                </span>
-                            }.into_any()
-                        ];
-                        elements.extend(children.iter().map(|child| {
-                            let href = child.href.clone();
-                            let label = child.label.clone();
-                            view! {
-                                <a href=href class="dm-no-underline dm-text-secondary" style="font-size:20px" on:click=move |_| mobile_open.set(false)>{label}</a>
-                            }.into_any()
-                        }));
-                        elements
-                    } else {
-                        let href = item.href.clone().unwrap_or_default();
-                        let label = item.label.clone();
-                        vec![view! {
-                            <a href=href class="dm-no-underline dm-text-secondary" style="font-size:20px" on:click=move |_| mobile_open.set(false)>{label}</a>
-                        }.into_any()]
-                    }
-                }).collect::<Vec<_>>()}
+    {items_mobile.iter().flat_map(|item| {
+        if item.is_dropdown() {
+            let children = item.children.clone();
+            let group_label = item.label.clone();
+            let href = item.href.clone();
+
+            // If the dropdown has an href, add it as the first item
+            let mut elements = if let Some(main_href) = href {
+                vec![
+                    view! {
+                        <a href=main_href class="dm-no-underline dm-text-secondary" style="font-size:20px;font-weight:600" on:click=move |_| mobile_open.set(false)>{group_label.clone()}</a>
+                    }.into_any()
+                ]
+            } else {
+                vec![
+                    view! {
+                        <span style="font-family:var(--dm-font-body);font-size:13px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:var(--dm-text-muted);margin-top:0.5rem">
+                            {group_label}
+                        </span>
+                    }.into_any()
+                ]
+            };
+
+            elements.extend(children.iter().map(|child| {
+                let href = child.href.clone();
+                let label = child.label.clone();
+                view! {
+                    <a href=href class="dm-no-underline dm-text-secondary" style="font-size:20px" on:click=move |_| mobile_open.set(false)>{label}</a>
+                }.into_any()
+            }));
+            elements
+        } else {
+            let href = item.href.clone().unwrap_or_default();
+            let label = item.label.clone();
+            vec![view! {
+                <a href=href class="dm-no-underline dm-text-secondary" style="font-size:20px" on:click=move |_| mobile_open.set(false)>{label}</a>
+            }.into_any()]
+        }
+    }).collect::<Vec<_>>()}
                 {cta_mobile.as_ref().map(|c| {
                     let href = c.href.clone();
                     let label = c.label.clone();
