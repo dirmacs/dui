@@ -255,51 +255,90 @@ pub fn Navbar(
         // Mobile menu
         <Show when=move || mobile_open.get()>
             <div class="dm-nav-mobile open">
-    {items_mobile.iter().flat_map(|item| {
-        if item.is_dropdown() {
-            let children = item.children.clone();
-            let group_label = item.label.clone();
-            let href = item.href.clone();
+                // Header: brand left, X button right
+                <div class="dm-nav-mobile-header">
+                    <a href="/" class="dm-nav-brand" on:click=move |_| mobile_open.set(false)>
+                        {brand_logo_url.map(|url| view! {
+                            <img src=url alt="" style="width:24px;height:24px;border-radius:var(--dm-radius)" />
+                        })}
+                        <span class="dm-nav-brand-text">{brand_name}</span>
+                    </a>
+                    <button
+                        class="dm-nav-mobile-close"
+                        on:click=move |_| mobile_open.set(false)
+                        aria-label="Close menu"
+                    >
+                        <svg style="width:24px;height:24px" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M18 6L6 18M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="dm-nav-mobile-sep"></div>
 
-            // If the dropdown has an href, add it as the first item
-            let mut elements = if let Some(main_href) = href {
-                vec![
-                    view! {
-                        <a href=main_href class="dm-no-underline dm-text-secondary" style="font-size:20px;font-weight:600" on:click=move |_| mobile_open.set(false)>{group_label.clone()}</a>
-                    }.into_any()
-                ]
-            } else {
-                vec![
-                    view! {
-                        <span style="font-family:var(--dm-font-body);font-size:13px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:var(--dm-text-muted);margin-top:0.5rem">
-                            {group_label}
-                        </span>
-                    }.into_any()
-                ]
-            };
+                // Nav items with expand/collapse for dropdowns
+                <div class="dm-nav-mobile-body">
+                    {items_mobile.iter().map(|item| {
+                        if item.is_dropdown() {
+                            let children = item.children.clone();
+                            let label = item.label.clone();
+                            let expanded = RwSignal::new(false);
 
-            elements.extend(children.iter().map(|child| {
-                let href = child.href.clone();
-                let label = child.label.clone();
-                view! {
-                    <a href=href class="dm-no-underline dm-text-secondary" style="font-size:20px" on:click=move |_| mobile_open.set(false)>{label}</a>
-                }.into_any()
-            }));
-            elements
-        } else {
-            let href = item.href.clone().unwrap_or_default();
-            let label = item.label.clone();
-            vec![view! {
-                <a href=href class="dm-no-underline dm-text-secondary" style="font-size:20px" on:click=move |_| mobile_open.set(false)>{label}</a>
-            }.into_any()]
-        }
-    }).collect::<Vec<_>>()}
+                            view! {
+                                <div>
+                                    <button
+                                        class="dm-nav-mobile-item"
+                                        on:click=move |_| expanded.update(|v| *v = !*v)
+                                    >
+                                        <span>{label}</span>
+                                        <span class="dm-nav-mobile-chevron">
+                                            {move || if expanded.get() {
+                                                view! {
+                                                    <svg style="width:18px;height:18px" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                        <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/>
+                                                    </svg>
+                                                }.into_any()
+                                            } else {
+                                                view! {
+                                                    <svg style="width:18px;height:18px" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                        <path d="M9 18l6-6-6-6" stroke-linecap="round" stroke-linejoin="round"/>
+                                                    </svg>
+                                                }.into_any()
+                                            }}
+                                        </span>
+                                    </button>
+                                    <Show when=move || expanded.get()>
+                                        <div class="dm-nav-mobile-submenu">
+                                            {children.iter().map(|child| {
+                                                let href = child.href.clone();
+                                                let label = child.label.clone();
+                                                view! {
+                                                    <a href=href class="dm-nav-mobile-subitem" on:click=move |_| mobile_open.set(false)>{label}</a>
+                                                }
+                                            }).collect::<Vec<_>>()}
+                                        </div>
+                                    </Show>
+                                </div>
+                            }.into_any()
+                        } else {
+                            let href = item.href.clone().unwrap_or_default();
+                            let label = item.label.clone();
+                            view! {
+                                <a href=href class="dm-nav-mobile-item" on:click=move |_| mobile_open.set(false)>{label}</a>
+                            }.into_any()
+                        }
+                    }).collect::<Vec<_>>()}
+                </div>
+
+                // CTA at bottom
                 {cta_mobile.as_ref().map(|c| {
                     let href = c.href.clone();
                     let label = c.label.clone();
-                    view! { <a href=href class="dm-nav-cta" on:click=move |_| mobile_open.set(false)>{label}</a> }
+                    view! {
+                        <div class="dm-nav-mobile-cta-wrap">
+                            <a href=href class="dm-nav-mobile-cta-btn" on:click=move |_| mobile_open.set(false)>{label}</a>
+                        </div>
+                    }
                 })}
-                <button class="dm-btn dm-btn-ghost dm-mt-4" on:click=move |_| mobile_open.set(false)>"Close"</button>
             </div>
         </Show>
     }
