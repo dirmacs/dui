@@ -88,7 +88,10 @@ pub fn Navbar(
     #[prop(default = "")] class: &'static str,
 ) -> impl IntoView {
     let scrolled = RwSignal::new(false);
+    let nav_hidden = RwSignal::new(false);
     let mobile_open = RwSignal::new(false);
+    // Non-reactive: tracks previous scroll Y to detect direction.
+    let last_y: StoredValue<f64> = StoredValue::new(0.0);
 
     Effect::new(move |_| {
         use wasm_bindgen::closure::Closure;
@@ -96,7 +99,18 @@ pub fn Navbar(
         let win = web_sys::window().unwrap();
         let cb = Closure::<dyn Fn()>::new(move || {
             let y = web_sys::window().unwrap().scroll_y().unwrap_or(0.0);
+            let prev = last_y.get_value();
             scrolled.set(y > 10.0);
+            // Always show near the top; hide when scrolling down, show when scrolling up.
+            // 4px deadband prevents jitter from scroll bounce.
+            if y <= 64.0 {
+                nav_hidden.set(false);
+            } else if y > prev + 4.0 {
+                nav_hidden.set(true);
+            } else if y < prev - 4.0 {
+                nav_hidden.set(false);
+            }
+            last_y.set_value(y);
         });
         win.add_event_listener_with_callback("scroll", cb.as_ref().unchecked_ref())
             .ok();
@@ -108,8 +122,9 @@ pub fn Navbar(
 
     view! {
         <nav class=move || format!(
-            "dm-nav {} {}",
+            "dm-nav {} {} {}",
             if scrolled.get() { "dm-nav-scrolled" } else { "" },
+            if nav_hidden.get() { "dm-nav-hidden" } else { "" },
             class,
         )>
             <div class="dm-nav-inner">
