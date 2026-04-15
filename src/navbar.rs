@@ -296,16 +296,29 @@ pub fn Navbar(
                         if item.is_dropdown() {
                             let children = item.children.clone();
                             let label = item.label.clone();
+                            let item_href = item.href.clone();
                             let expanded = RwSignal::new(false);
 
                             view! {
                                 <div>
-                                    <button
-                                        class="dm-nav-mobile-item"
-                                        on:click=move |_| expanded.update(|v| *v = !*v)
-                                    >
-                                        <span>{label}</span>
-                                        <span class="dm-nav-mobile-chevron">
+                                    <div class="dm-nav-mobile-item">
+                                        {if let Some(page_href) = item_href {
+                                            view! {
+                                                <a href=page_href
+                                                    style="flex:1;color:inherit;text-decoration:none;font:inherit"
+                                                    on:click=move |_| mobile_open.set(false)
+                                                >{label}</a>
+                                            }.into_any()
+                                        } else {
+                                            view! {
+                                                <span style="flex:1">{label}</span>
+                                            }.into_any()
+                                        }}
+                                        <button
+                                            style="background:none;border:none;cursor:pointer;padding:4px;display:flex;align-items:center;color:var(--dm-text-secondary)"
+                                            on:click=move |_| expanded.update(|v| *v = !*v)
+                                            aria-label="Toggle submenu"
+                                        >
                                             {move || if expanded.get() {
                                                 view! {
                                                     <svg style="width:18px;height:18px" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -319,8 +332,8 @@ pub fn Navbar(
                                                     </svg>
                                                 }.into_any()
                                             }}
-                                        </span>
-                                    </button>
+                                        </button>
+                                    </div>
                                     <Show when=move || expanded.get()>
                                         <div class="dm-nav-mobile-submenu">
                                             {children.iter().map(|child| {
