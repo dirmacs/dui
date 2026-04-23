@@ -186,13 +186,36 @@ pub fn Navbar(
                         }
                     >
                         {if item.href.is_some() {
+                            let href = item.href.clone().unwrap();
+                            let label_for_link = label.clone();
+                            let toggle_aria = format!("Toggle {} submenu", label);
                             view! {
-                                <a href=item.href.clone().unwrap() class="dm-nav-links dm-cursor-pointer dm-no-underline" style="display:flex;align-items:center;gap:4px;color:var(--dm-text-secondary)">
-                                    {label}
-                                    <svg style="width:12px;height:12px;opacity:0.5" viewBox="0 0 12 12" fill="currentColor">
-                                        <path d="M2.5 4.5L6 8l3.5-3.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                </a>
+                                <div style="display:flex;align-items:center;gap:2px;color:var(--dm-text-secondary)">
+                                    <a
+                                        href=href
+                                        class="dm-nav-links dm-cursor-pointer dm-no-underline"
+                                        style="display:flex;align-items:center;color:var(--dm-text-secondary);padding-right:2px"
+                                    >
+                                        {label_for_link}
+                                    </a>
+                                    <button
+                                        type="button"
+                                        class="dm-nav-dropdown-toggle"
+                                        style="background:none;border:none;cursor:pointer;padding:6px 8px;display:flex;align-items:center;justify-content:center;color:var(--dm-text-secondary)"
+                                        on:click=move |ev| {
+                                            ev.prevent_default();
+                                            ev.stop_propagation();
+                                            open.update(|v| *v = !*v);
+                                        }
+                                        aria-label=toggle_aria
+                                        attr:aria-expanded=move || if open.get() { "true" } else { "false" }
+                                        aria-haspopup="menu"
+                                    >
+                                        <svg style="width:12px;height:12px;opacity:0.5" viewBox="0 0 12 12" fill="currentColor">
+                                            <path d="M2.5 4.5L6 8l3.5-3.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </button>
+                                </div>
                             }.into_any()
                         } else {
                             view! {
@@ -315,7 +338,7 @@ pub fn Navbar(
                                             }.into_any()
                                         }}
                                         <button
-                                            style="background:none;border:none;cursor:pointer;padding:4px;display:flex;align-items:center;color:var(--dm-text-secondary)"
+                                            style="background:none;border:none;cursor:pointer;padding:8px 10px;min-width:40px;display:flex;align-items:center;justify-content:center;color:var(--dm-text-secondary)"
                                             on:click=move |_| expanded.update(|v| *v = !*v)
                                             aria-label="Toggle submenu"
                                         >
