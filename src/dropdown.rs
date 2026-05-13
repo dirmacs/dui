@@ -1,7 +1,8 @@
 //! Dropdown — a menu of actions/items triggered by an element.
 
 use leptos::prelude::*;
-use wasm_bindgen::prelude::*;
+use send_wrapper::SendWrapper;
+use wasm_bindgen::{prelude::*, JsCast};
 
 /// Alignment of the dropdown menu relative to the trigger.
 #[derive(Debug, Default, Clone, Copy, PartialEq)]
@@ -72,25 +73,21 @@ pub fn Dropdown(
         })
         .collect();
 
-    // Click outside to close
-    Effect::new(move |_| {
-        let window = match web_sys::window() { Some(w) => w, None => return };
-        let cb = Closure::<dyn Fn(web_sys::MouseEvent)>::new(move |_: web_sys::MouseEvent| {
-            // Simple close — the menu items handle their own clicks before this fires
-            // We use a timeout to let item clicks process first
-        });
-        let _ = window.add_event_listener_with_callback("mousedown", cb.as_ref().unchecked_ref());
-        cb.forget();
-    });
-
     // Escape to close
     Effect::new(move |_| {
+        if !open.get() {
+            return;
+        }
         let window = match web_sys::window() { Some(w) => w, None => return };
         let cb = Closure::<dyn Fn(web_sys::KeyboardEvent)>::new(move |ev: web_sys::KeyboardEvent| {
             if ev.key() == "Escape" { open.set(false); }
         });
         let _ = window.add_event_listener_with_callback("keydown", cb.as_ref().unchecked_ref());
-        cb.forget();
+        let window = SendWrapper::new(window);
+        let cb = SendWrapper::new(cb);
+        on_cleanup(move || {
+            let _ = window.remove_event_listener_with_callback("keydown", cb.as_ref().unchecked_ref());
+        });
     });
 
     let align_style = match align {

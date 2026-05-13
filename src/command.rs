@@ -5,6 +5,7 @@ use leptos::prelude::*;
 use leptos::callback::{Callback, Callable};
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
+use send_wrapper::SendWrapper;
 
 // ---------------------------------------------------------------------------
 // Data types
@@ -173,6 +174,9 @@ pub fn CommandPalette(
 
     // -- Global Escape key listener (same pattern as Modal) ------------------
     Effect::new(move |_| {
+        if !open.get() {
+            return;
+        }
         let window = match web_sys::window() {
             Some(w) => w,
             None => return,
@@ -183,7 +187,11 @@ pub fn CommandPalette(
             }
         });
         let _ = window.add_event_listener_with_callback("keydown", cb.as_ref().unchecked_ref());
-        cb.forget();
+        let window = SendWrapper::new(window);
+        let cb = SendWrapper::new(cb);
+        on_cleanup(move || {
+            let _ = window.remove_event_listener_with_callback("keydown", cb.as_ref().unchecked_ref());
+        });
     });
 
     // -- View ----------------------------------------------------------------

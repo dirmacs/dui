@@ -1,7 +1,8 @@
 //! Modal — overlay dialog with backdrop, close-on-escape, and close-on-click-outside.
 
 use leptos::prelude::*;
-use wasm_bindgen::prelude::*;
+use send_wrapper::SendWrapper;
+use wasm_bindgen::{prelude::*, JsCast};
 
 /// A centered modal overlay with backdrop, title bar, and close triggers.
 ///
@@ -21,6 +22,9 @@ pub fn Modal(
     children: Children,
 ) -> impl IntoView {
     Effect::new(move |_| {
+        if !open.get() {
+            return;
+        }
         let window = match web_sys::window() {
             Some(w) => w,
             None => return,
@@ -29,7 +33,11 @@ pub fn Modal(
             if ev.key() == "Escape" { open.set(false); }
         });
         let _ = window.add_event_listener_with_callback("keydown", cb.as_ref().unchecked_ref());
-        cb.forget();
+        let window = SendWrapper::new(window);
+        let cb = SendWrapper::new(cb);
+        on_cleanup(move || {
+            let _ = window.remove_event_listener_with_callback("keydown", cb.as_ref().unchecked_ref());
+        });
     });
 
     let has_title = !title.is_empty();

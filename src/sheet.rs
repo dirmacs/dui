@@ -1,7 +1,8 @@
 //! Sheet — a slide-out panel from any edge.
 
 use leptos::prelude::*;
-use wasm_bindgen::prelude::*;
+use send_wrapper::SendWrapper;
+use wasm_bindgen::{prelude::*, JsCast};
 
 /// Which edge the sheet slides in from.
 #[derive(Debug, Default, Clone, Copy, PartialEq)]
@@ -32,12 +33,19 @@ pub fn Sheet(
     children: Children,
 ) -> impl IntoView {
     Effect::new(move |_| {
+        if !open.get() {
+            return;
+        }
         let window = match web_sys::window() { Some(w) => w, None => return };
         let cb = Closure::<dyn Fn(web_sys::KeyboardEvent)>::new(move |ev: web_sys::KeyboardEvent| {
             if ev.key() == "Escape" { open.set(false); }
         });
         let _ = window.add_event_listener_with_callback("keydown", cb.as_ref().unchecked_ref());
-        cb.forget();
+        let window = SendWrapper::new(window);
+        let cb = SendWrapper::new(cb);
+        on_cleanup(move || {
+            let _ = window.remove_event_listener_with_callback("keydown", cb.as_ref().unchecked_ref());
+        });
     });
 
     let has_title = !title.is_empty();
