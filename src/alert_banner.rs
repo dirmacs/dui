@@ -38,7 +38,7 @@ pub fn AlertBanner(
     };
 
     view! {
-        <Show when=move || visible.get()>
+        <Show when=move || visible.try_get().unwrap_or(false)>
             <div class=format!("dm-alert {}", level_class) role="alert">
                 <svg style="width:18px;height:18px;flex-shrink:0" xmlns="http://www.w3.org/2000/svg"
                      fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">

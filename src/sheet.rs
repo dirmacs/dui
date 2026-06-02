@@ -33,7 +33,7 @@ pub fn Sheet(
     children: Children,
 ) -> impl IntoView {
     Effect::new(move |_| {
-        if !open.get() {
+        if !open.try_get().unwrap_or(false) {
             return;
         }
         let window = match web_sys::window() { Some(w) => w, None => return };
@@ -58,12 +58,12 @@ pub fn Sheet(
     view! {
         // Backdrop
         <div
-            class=move || if open.get() { "dm-sheet-backdrop" } else { "dm-hidden" }
+            class=move || if open.try_get().unwrap_or(false) { "dm-sheet-backdrop" } else { "dm-hidden" }
             on:click=move |_| open.set(false)
         />
         // Panel
         <div
-            class=move || format!("dm-sheet {} {}", side_class, if open.get() { "" } else { "dm-hidden" })
+            class=move || format!("dm-sheet {} {}", side_class, if open.try_get().unwrap_or(false) { "" } else { "dm-hidden" })
             style=format!("width:{};max-width:90vw", width)
         >
             {has_title.then(|| view! {

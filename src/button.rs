@@ -53,7 +53,7 @@ pub fn Button(
     /// Button contents (text, icons, etc).
     children: Children,
 ) -> impl IntoView {
-    let is_disabled = move || loading.get() || disabled.get();
+    let is_disabled = move || loading.try_get().unwrap_or(false) || disabled.try_get().unwrap_or(false);
 
     let variant_class = match variant {
         ButtonVariant::Primary => "dm-btn-primary",
@@ -86,7 +86,7 @@ pub fn Button(
                 }
             }
         >
-            <Show when=move || loading.get()>
+            <Show when=move || loading.try_get().unwrap_or(false)>
                 <span class="dm-btn-spinner"></span>
             </Show>
             {children()}

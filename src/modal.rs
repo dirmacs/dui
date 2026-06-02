@@ -22,7 +22,7 @@ pub fn Modal(
     children: Children,
 ) -> impl IntoView {
     Effect::new(move |_| {
-        if !open.get() {
+        if !open.try_get().unwrap_or(false) {
             return;
         }
         let window = match web_sys::window() {
@@ -45,7 +45,7 @@ pub fn Modal(
 
     view! {
         <div
-            class=move || if open.get() { "dm-modal-backdrop" } else { "dm-hidden" }
+            class=move || if open.try_get().unwrap_or(false) { "dm-modal-backdrop" } else { "dm-hidden" }
             on:mousedown=move |ev| {
                 use wasm_bindgen::JsCast;
                 if let Some(target) = ev.target() {
