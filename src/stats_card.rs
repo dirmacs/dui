@@ -23,12 +23,12 @@ pub fn StatsCard(
     value_class: &'static str,
 ) -> impl IntoView {
     view! {
-        <div class="dm-card dm-card-accent">
-            <div class="dm-flex dm-items-center dm-justify-between dm-mb-2">
-                <span class="dm-label">{title}</span>
-                {icon.map(|i| view! { <span class="dm-text-accent">{i}</span> })}
+        <div class="dm-card dm-card-accent" style="padding:0.8rem 0.95rem">
+            <div class="dm-flex dm-items-center dm-justify-between" style="margin-bottom:0.3rem">
+                <span class="dm-label" style="font-size:11px;letter-spacing:0.04em">{title}</span>
+                {icon.map(|i| view! { <span class="dm-text-accent" style="font-size:12px;opacity:0.7">{i}</span> })}
             </div>
-            <div class=format!("dm-font-mono dm-font-bold dm-text-primary {}", value_class) style="font-size:28px">
+            <div class=format!("dm-font-mono dm-font-bold dm-text-primary {}", value_class) style="font-size:20px;line-height:1.15">
                 {value}
             </div>
             {subtitle.map(|s| view! { <div class="dm-text-xs dm-text-secondary dm-mt-1">{s}</div> })}
