@@ -43,12 +43,12 @@ pub fn Card(
         CardGlow::Warning => ("", "border-color:var(--dm-inferred-border);box-shadow:var(--dm-inferred-glow)"),
         CardGlow::Danger  => ("", "border-color:var(--dm-unknown-border);box-shadow:var(--dm-unknown-glow)"),
         CardGlow::Purple  => ("", "border-color:rgba(168,85,247,0.4);box-shadow:0 0 16px rgba(168,85,247,0.15)"),
-        CardGlow::Brutal  => ("dm-card-brutal", ""),
+        CardGlow::Brutal  => ("dm-card-brutal dm-overflow-hidden", ""),
     };
 
     view! {
         <div
-            class=format!("dm-card dm-overflow-hidden {} {} {}", extra_class, class, "")
+            class=format!("dm-card {} {}", extra_class, class)
             style=extra_style
         >
             {header.map(|h| view! {
