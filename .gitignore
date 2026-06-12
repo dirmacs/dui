@@ -2,3 +2,18 @@
 /dist/
 pawan.toml
 target/
+
+# OS/editor noise
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Local env and logs
+.env
+.env.*
+*.log
