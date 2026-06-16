@@ -7,8 +7,7 @@ use leptos::prelude::*;
 #[component]
 pub fn PublicLayout(
     children: Children,
-    #[prop(default = "")]
-    class: &'static str,
+    #[prop(default = "")] class: &'static str,
 ) -> impl IntoView {
     view! {
         <div class=format!("dm-min-h-screen dm-bg dm-text-primary {}", class)>

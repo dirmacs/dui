@@ -4,7 +4,11 @@ use leptos::prelude::*;
 
 /// Image placement in the hero.
 #[derive(Debug, Clone, Copy, Default, PartialEq)]
-pub enum HeroImageSide { Left, #[default] Right }
+pub enum HeroImageSide {
+    Left,
+    #[default]
+    Right,
+}
 
 /// Landing page hero section.
 ///

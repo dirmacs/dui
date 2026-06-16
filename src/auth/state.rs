@@ -106,7 +106,10 @@ mod tests {
 
     #[test]
     fn test_auth_state_empty() {
-        let state = AuthState { token: None, user: None };
+        let state = AuthState {
+            token: None,
+            user: None,
+        };
         assert!(state.token.is_none());
         assert!(state.user.is_none());
     }

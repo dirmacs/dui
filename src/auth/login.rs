@@ -1,7 +1,7 @@
 //! Login page component — authenticates against Eruka.
 
+use super::state::{store_auth, AuthConfig, UserInfo};
 use leptos::prelude::*;
-use super::state::{AuthConfig, UserInfo, store_auth};
 
 #[derive(Clone, Debug, serde::Deserialize)]
 struct LoginResponse {
@@ -35,7 +35,9 @@ pub fn LoginPage(
             error.set("Please enter email and password".to_string());
             return;
         }
-        if loading.get() { return; }
+        if loading.get() {
+            return;
+        }
         loading.set(true);
         error.set(String::new());
 
@@ -51,29 +53,27 @@ pub fn LoginPage(
                 .send()
                 .await
             {
-                Ok(resp) if resp.ok() => {
-                    match resp.json::<LoginResponse>().await {
-                        Ok(data) => {
-                            let user = UserInfo {
-                                id: data.user.id,
-                                email: data.user.email,
-                                name: data.user.name,
-                            };
-                            store_auth(&data.token, &user);
-                            if let Some(setter) = on_success {
-                                setter.set(true);
-                            } else {
-                                if let Some(window) = web_sys::window() {
-                                    let _ = window.location().reload();
-                                }
+                Ok(resp) if resp.ok() => match resp.json::<LoginResponse>().await {
+                    Ok(data) => {
+                        let user = UserInfo {
+                            id: data.user.id,
+                            email: data.user.email,
+                            name: data.user.name,
+                        };
+                        store_auth(&data.token, &user);
+                        if let Some(setter) = on_success {
+                            setter.set(true);
+                        } else {
+                            if let Some(window) = web_sys::window() {
+                                let _ = window.location().reload();
                             }
                         }
-                        Err(_) => {
-                            error.set("Failed to parse login response".to_string());
-                            loading.set(false);
-                        }
                     }
-                }
+                    Err(_) => {
+                        error.set("Failed to parse login response".to_string());
+                        loading.set(false);
+                    }
+                },
                 Ok(resp) => {
                     let status = resp.status();
                     if status == 401 {

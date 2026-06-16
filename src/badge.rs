@@ -30,11 +30,11 @@ pub fn Badge(
     children: Children,
 ) -> impl IntoView {
     let color_class = match color {
-        BadgeColor::Gray   => "dm-badge-gray",
-        BadgeColor::Blue   => "dm-badge-blue",
-        BadgeColor::Green  => "dm-badge-green",
+        BadgeColor::Gray => "dm-badge-gray",
+        BadgeColor::Blue => "dm-badge-blue",
+        BadgeColor::Green => "dm-badge-green",
         BadgeColor::Yellow => "dm-badge-yellow",
-        BadgeColor::Red    => "dm-badge-red",
+        BadgeColor::Red => "dm-badge-red",
         BadgeColor::Purple => "dm-badge-purple",
     };
 

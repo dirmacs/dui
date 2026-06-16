@@ -38,11 +38,17 @@ pub fn Textarea(
     class: &'static str,
 ) -> impl IntoView {
     let has_error = move || !error.get().is_empty();
-    let resize_style = if resize { "resize:vertical" } else { "resize:none" };
+    let resize_style = if resize {
+        "resize:vertical"
+    } else {
+        "resize:none"
+    };
 
     let error_id: &'static str = match label {
-        Some(l) => Box::leak(format!("{}-error", l.to_lowercase().replace(' ', "-")).into_boxed_str()),
-        None    => "textarea-error",
+        Some(l) => {
+            Box::leak(format!("{}-error", l.to_lowercase().replace(' ', "-")).into_boxed_str())
+        }
+        None => "textarea-error",
     };
 
     view! {

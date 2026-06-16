@@ -53,7 +53,8 @@ pub fn Button(
     /// Button contents (text, icons, etc).
     children: Children,
 ) -> impl IntoView {
-    let is_disabled = move || loading.try_get().unwrap_or(false) || disabled.try_get().unwrap_or(false);
+    let is_disabled =
+        move || loading.try_get().unwrap_or(false) || disabled.try_get().unwrap_or(false);
 
     let variant_class = match variant {
         ButtonVariant::Primary => "dm-btn-primary",

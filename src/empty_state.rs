@@ -14,7 +14,9 @@ pub fn EmptyState(
     #[prop(default = "")]
     description: &'static str,
     /// SVG path data for the illustration icon (24x24 viewBox).
-    #[prop(default = "M2.25 13.5a8.25 8.25 0 0 1 8.25-8.25.75.75 0 0 1 .75.75v6.75H18a.75.75 0 0 1 .75.75 8.25 8.25 0 0 1-16.5 0Z")]
+    #[prop(
+        default = "M2.25 13.5a8.25 8.25 0 0 1 8.25-8.25.75.75 0 0 1 .75.75v6.75H18a.75.75 0 0 1 .75.75 8.25 8.25 0 0 1-16.5 0Z"
+    )]
     icon_path: &'static str,
     /// Optional action slot (e.g. a "Create" button).
     #[prop(optional)]

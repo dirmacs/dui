@@ -36,15 +36,26 @@ impl ToastState {
         self.push_with_duration(level, message, 4000);
     }
 
-    pub fn push_with_duration(&self, level: ToastLevel, message: impl Into<String>, duration_ms: u32) {
+    pub fn push_with_duration(
+        &self,
+        level: ToastLevel,
+        message: impl Into<String>,
+        duration_ms: u32,
+    ) {
         let id = self.next_id.get();
         self.next_id.set(id + 1);
-        let toast = ToastData { id, level, message: message.into(), duration_ms };
+        let toast = ToastData {
+            id,
+            level,
+            message: message.into(),
+            duration_ms,
+        };
         self.items.update(|list| list.push(toast));
         let items = self.items;
         gloo_timers::callback::Timeout::new(duration_ms, move || {
             items.update(|list| list.retain(|t| t.id != id));
-        }).forget();
+        })
+        .forget();
     }
 
     pub fn dismiss(&self, id: u64) {

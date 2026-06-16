@@ -3,19 +3,53 @@
 use leptos::prelude::*;
 
 #[derive(Debug, Clone)]
-pub struct FooterColumn { pub heading: String, pub links: Vec<FooterLink> }
-impl FooterColumn { pub fn new(heading: &str, links: Vec<FooterLink>) -> Self { Self { heading: heading.to_string(), links } } }
+pub struct FooterColumn {
+    pub heading: String,
+    pub links: Vec<FooterLink>,
+}
+impl FooterColumn {
+    pub fn new(heading: &str, links: Vec<FooterLink>) -> Self {
+        Self {
+            heading: heading.to_string(),
+            links,
+        }
+    }
+}
 
 #[derive(Debug, Clone)]
-pub struct FooterLink { pub label: String, pub href: String }
-impl FooterLink { pub fn new(label: &str, href: &str) -> Self { Self { label: label.to_string(), href: href.to_string() } } }
+pub struct FooterLink {
+    pub label: String,
+    pub href: String,
+}
+impl FooterLink {
+    pub fn new(label: &str, href: &str) -> Self {
+        Self {
+            label: label.to_string(),
+            href: href.to_string(),
+        }
+    }
+}
 
 #[derive(Debug, Clone, Copy, PartialEq)]
-pub enum SocialPlatform { LinkedIn, Twitter, GitHub }
+pub enum SocialPlatform {
+    LinkedIn,
+    Twitter,
+    GitHub,
+}
 
 #[derive(Debug, Clone)]
-pub struct SocialLink { pub platform: SocialPlatform, pub href: String }
-impl SocialLink { pub fn new(platform: SocialPlatform, href: &str) -> Self { Self { platform, href: href.to_string() } } }
+pub struct SocialLink {
+    pub platform: SocialPlatform,
+    pub href: String,
+}
+impl SocialLink {
+    pub fn new(platform: SocialPlatform, href: &str) -> Self {
+        Self {
+            platform,
+            href: href.to_string(),
+        }
+    }
+}
 
 /// Site footer. Uses DUI CSS: `.dm-footer`, `.dm-footer-grid`, `.dm-footer-heading`, `.dm-footer-link`, `.dm-footer-social`, `.dm-footer-trust`, `.dm-footer-bottom`.
 /// No Tailwind required.

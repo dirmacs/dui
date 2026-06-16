@@ -25,7 +25,9 @@ pub fn ChipSelect(
     class: &'static str,
 ) -> impl IntoView {
     let toggle = move |option: String| {
-        if disabled.get() { return; }
+        if disabled.get() {
+            return;
+        }
         let mut current = selected.get();
         if let Some(pos) = current.iter().position(|s| *s == option) {
             current.remove(pos);

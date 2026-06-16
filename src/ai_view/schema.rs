@@ -19,33 +19,84 @@ pub enum AiComponent {
     #[serde(rename = "heading")]
     Heading { text: String, level: Option<u8> },
     #[serde(rename = "text")]
-    Text { content: String, muted: Option<bool> },
+    Text {
+        content: String,
+        muted: Option<bool>,
+    },
     #[serde(rename = "text_input")]
-    TextInput { id: String, label: Option<String>, placeholder: Option<String>, required: Option<bool> },
+    TextInput {
+        id: String,
+        label: Option<String>,
+        placeholder: Option<String>,
+        required: Option<bool>,
+    },
     #[serde(rename = "email_input")]
-    EmailInput { id: String, label: Option<String>, placeholder: Option<String> },
+    EmailInput {
+        id: String,
+        label: Option<String>,
+        placeholder: Option<String>,
+    },
     #[serde(rename = "select")]
-    Select { id: String, label: Option<String>, options: Vec<String>, placeholder: Option<String> },
+    Select {
+        id: String,
+        label: Option<String>,
+        options: Vec<String>,
+        placeholder: Option<String>,
+    },
     #[serde(rename = "radio")]
-    Radio { id: String, label: Option<String>, options: Vec<RadioOptionSpec> },
+    Radio {
+        id: String,
+        label: Option<String>,
+        options: Vec<RadioOptionSpec>,
+    },
     #[serde(rename = "chip_select")]
-    ChipSelect { id: String, label: Option<String>, options: Vec<String>, max_selections: Option<usize> },
+    ChipSelect {
+        id: String,
+        label: Option<String>,
+        options: Vec<String>,
+        max_selections: Option<usize>,
+    },
     #[serde(rename = "checkbox")]
-    Checkbox { id: String, label: String, description: Option<String> },
+    Checkbox {
+        id: String,
+        label: String,
+        description: Option<String>,
+    },
     #[serde(rename = "textarea")]
-    Textarea { id: String, label: Option<String>, placeholder: Option<String>, rows: Option<u32> },
+    Textarea {
+        id: String,
+        label: Option<String>,
+        placeholder: Option<String>,
+        rows: Option<u32>,
+    },
     #[serde(rename = "score_ring")]
-    ScoreRing { score: u32, size: Option<u32>, label: Option<String> },
+    ScoreRing {
+        score: u32,
+        size: Option<u32>,
+        label: Option<String>,
+    },
     #[serde(rename = "card")]
-    Card { title: Option<String>, content: String, glow: Option<String> },
+    Card {
+        title: Option<String>,
+        content: String,
+        glow: Option<String>,
+    },
     #[serde(rename = "divider")]
     Divider {},
     #[serde(rename = "progress")]
-    Progress { value: f64, max: Option<f64>, label: Option<String> },
+    Progress {
+        value: f64,
+        max: Option<f64>,
+        label: Option<String>,
+    },
     #[serde(rename = "chat_message")]
     ChatMessage { sender: String, content: String },
     #[serde(rename = "file_upload")]
-    FileUpload { id: String, accept: Option<String>, label: Option<String> },
+    FileUpload {
+        id: String,
+        accept: Option<String>,
+        label: Option<String>,
+    },
     #[serde(rename = "stats_row")]
     StatsRow { items: Vec<StatItem> },
 }

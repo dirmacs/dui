@@ -29,14 +29,18 @@ pub fn Modal(
             Some(w) => w,
             None => return,
         };
-        let cb = Closure::<dyn Fn(web_sys::KeyboardEvent)>::new(move |ev: web_sys::KeyboardEvent| {
-            if ev.key() == "Escape" { open.set(false); }
-        });
+        let cb =
+            Closure::<dyn Fn(web_sys::KeyboardEvent)>::new(move |ev: web_sys::KeyboardEvent| {
+                if ev.key() == "Escape" {
+                    open.set(false);
+                }
+            });
         let _ = window.add_event_listener_with_callback("keydown", cb.as_ref().unchecked_ref());
         let window = SendWrapper::new(window);
         let cb = SendWrapper::new(cb);
         on_cleanup(move || {
-            let _ = window.remove_event_listener_with_callback("keydown", cb.as_ref().unchecked_ref());
+            let _ =
+                window.remove_event_listener_with_callback("keydown", cb.as_ref().unchecked_ref());
         });
     });
 

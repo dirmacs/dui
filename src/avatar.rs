@@ -16,11 +16,11 @@ pub enum AvatarSize {
 impl AvatarSize {
     fn class(&self) -> &'static str {
         match self {
-            AvatarSize::Xs => "dm-avatar-sm",  // reuse sm for xs
+            AvatarSize::Xs => "dm-avatar-sm", // reuse sm for xs
             AvatarSize::Sm => "dm-avatar-sm",
             AvatarSize::Md => "dm-avatar-md",
             AvatarSize::Lg => "dm-avatar-lg",
-            AvatarSize::Xl => "dm-avatar-lg",  // reuse lg for xl, override with style
+            AvatarSize::Xl => "dm-avatar-lg", // reuse lg for xl, override with style
         }
     }
     fn style(&self) -> &'static str {

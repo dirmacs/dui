@@ -16,10 +16,10 @@ impl Status {
     /// Human-readable label.
     pub fn label(&self) -> &'static str {
         match self {
-            Status::Healthy  => "Healthy",
+            Status::Healthy => "Healthy",
             Status::Degraded => "Degraded",
-            Status::Down     => "Down",
-            Status::Unknown  => "Unknown",
+            Status::Down => "Down",
+            Status::Unknown => "Unknown",
         }
     }
 }
@@ -35,25 +35,31 @@ pub fn StatusBadge(
     #[prop(optional)]
     label: Option<String>,
 ) -> impl IntoView {
-    let dot_style = move || match status.get() {
+    let dot_style = move || {
+        match status.get() {
         Status::Healthy  => "background:var(--dm-confirmed);animation:dm-pulse 2s cubic-bezier(0.4,0,0.6,1) infinite",
         Status::Degraded => "background:var(--dm-inferred)",
         Status::Down     => "background:var(--dm-unknown)",
         Status::Unknown  => "background:var(--dm-text-dim)",
+    }
     };
 
     let text_style = move || match status.get() {
-        Status::Healthy  => "color:var(--dm-confirmed-text)",
+        Status::Healthy => "color:var(--dm-confirmed-text)",
         Status::Degraded => "color:var(--dm-inferred-text)",
-        Status::Down     => "color:var(--dm-unknown-text)",
-        Status::Unknown  => "color:var(--dm-text-muted)",
+        Status::Down => "color:var(--dm-unknown-text)",
+        Status::Unknown => "color:var(--dm-text-muted)",
     };
 
     let badge_style = move || match status.get() {
-        Status::Healthy  => "background:var(--dm-confirmed-muted);border-color:var(--dm-confirmed-border)",
-        Status::Degraded => "background:var(--dm-inferred-muted);border-color:var(--dm-inferred-border)",
-        Status::Down     => "background:var(--dm-unknown-muted);border-color:var(--dm-unknown-border)",
-        Status::Unknown  => "background:var(--dm-elevated);border-color:var(--dm-border)",
+        Status::Healthy => {
+            "background:var(--dm-confirmed-muted);border-color:var(--dm-confirmed-border)"
+        }
+        Status::Degraded => {
+            "background:var(--dm-inferred-muted);border-color:var(--dm-inferred-border)"
+        }
+        Status::Down => "background:var(--dm-unknown-muted);border-color:var(--dm-unknown-border)",
+        Status::Unknown => "background:var(--dm-elevated);border-color:var(--dm-border)",
     };
 
     view! {

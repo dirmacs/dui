@@ -27,43 +27,35 @@ pub fn Divider(
     class: &'static str,
 ) -> impl IntoView {
     match orientation {
-        DividerOrientation::Vertical => {
-            view! {
+        DividerOrientation::Vertical => view! {
+            <div
+                class=format!("dm-divider-vertical {}", class)
+                role="separator"
+                aria-orientation="vertical"
+            ></div>
+        }
+        .into_any(),
+        DividerOrientation::Horizontal => match label {
+            Some(text) => view! {
                 <div
-                    class=format!("dm-divider-vertical {}", class)
+                    class=format!("dm-flex dm-items-center dm-w-full {}", class)
                     role="separator"
-                    aria-orientation="vertical"
+                    aria-orientation="horizontal"
+                >
+                    <div class="dm-divider dm-grow"></div>
+                    <span class="dm-text-xs dm-text-muted dm-px-3 dm-shrink-0">{text}</span>
+                    <div class="dm-divider dm-grow"></div>
+                </div>
+            }
+            .into_any(),
+            None => view! {
+                <div
+                    class=format!("dm-divider dm-w-full {}", class)
+                    role="separator"
+                    aria-orientation="horizontal"
                 ></div>
             }
-            .into_any()
-        }
-        DividerOrientation::Horizontal => {
-            match label {
-                Some(text) => {
-                    view! {
-                        <div
-                            class=format!("dm-flex dm-items-center dm-w-full {}", class)
-                            role="separator"
-                            aria-orientation="horizontal"
-                        >
-                            <div class="dm-divider dm-grow"></div>
-                            <span class="dm-text-xs dm-text-muted dm-px-3 dm-shrink-0">{text}</span>
-                            <div class="dm-divider dm-grow"></div>
-                        </div>
-                    }
-                    .into_any()
-                }
-                None => {
-                    view! {
-                        <div
-                            class=format!("dm-divider dm-w-full {}", class)
-                            role="separator"
-                            aria-orientation="horizontal"
-                        ></div>
-                    }
-                    .into_any()
-                }
-            }
-        }
+            .into_any(),
+        },
     }
 }

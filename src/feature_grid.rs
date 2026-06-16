@@ -12,13 +12,26 @@ pub struct FeatureItem {
 
 impl FeatureItem {
     pub fn new(icon: &str, title: &str, description: &str) -> Self {
-        Self { icon: icon.to_string(), title: title.to_string(), description: description.to_string(), href: None }
+        Self {
+            icon: icon.to_string(),
+            title: title.to_string(),
+            description: description.to_string(),
+            href: None,
+        }
     }
-    pub fn with_link(mut self, href: &str) -> Self { self.href = Some(href.to_string()); self }
+    pub fn with_link(mut self, href: &str) -> Self {
+        self.href = Some(href.to_string());
+        self
+    }
 }
 
 #[derive(Debug, Clone, Copy, Default, PartialEq)]
-pub enum GridColumns { Two, #[default] Three, Four }
+pub enum GridColumns {
+    Two,
+    #[default]
+    Three,
+    Four,
+}
 
 /// Responsive feature card grid. Uses DUI CSS: `.dm-card`, `.dm-grid-*`. No Tailwind.
 #[component]

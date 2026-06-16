@@ -16,8 +16,7 @@ pub struct StepDef {
 pub fn Stepper(
     steps: Vec<StepDef>,
     current: RwSignal<usize>,
-    #[prop(default = "")]
-    class: &'static str,
+    #[prop(default = "")] class: &'static str,
 ) -> impl IntoView {
     let total = steps.len();
     view! {

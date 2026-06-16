@@ -35,7 +35,11 @@ pub fn ChatMessage(
         "padding:10px 16px;border-radius:var(--dm-radius-lg);border-bottom-left-radius:2px;font-size:14px;line-height:1.6;max-width:600px;border:2px solid var(--dm-border);border-left:4px solid var(--dm-accent);background:var(--dm-surface);color:var(--dm-text)"
     };
 
-    let justify = if is_user { "dm-justify-end" } else { "dm-justify-start" };
+    let justify = if is_user {
+        "dm-justify-end"
+    } else {
+        "dm-justify-start"
+    };
 
     view! {
         <div class=format!("dm-flex {} {}", justify, class)>
