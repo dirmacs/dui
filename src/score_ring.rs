@@ -7,7 +7,9 @@ use leptos::prelude::*;
 ///
 /// # Example
 /// ```rust
-/// view! { <ScoreRing score=68 size=140 label="Overall" /> }
+/// # use leptos::prelude::*;
+/// # use dui::score_ring::ScoreRing;
+/// view! { <ScoreRing score=68 size=140 label="Overall".to_string() /> };
 /// ```
 #[component]
 pub fn ScoreRing(

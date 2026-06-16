@@ -1,11 +1,11 @@
 //! CommandPalette — Cmd+K style command menu with fuzzy search, keyboard
 //! navigation, grouped results, and full ARIA support.
 
+use leptos::callback::{Callable, Callback};
 use leptos::prelude::*;
-use leptos::callback::{Callback, Callable};
+use send_wrapper::SendWrapper;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
-use send_wrapper::SendWrapper;
 
 // ---------------------------------------------------------------------------
 // Data types
@@ -56,7 +56,9 @@ const KBD_CLASS: &str = "dm-kbd";
 /// - **ARIA**: `role="dialog"`, combobox, listbox, option, and group roles.
 ///
 /// # Example
-/// ```rust
+/// ```rust,no_run
+/// # use leptos::prelude::*;
+/// # use dui::command::{CommandItem, CommandPalette};
 /// let open = RwSignal::new(false);
 /// let items = Signal::derive(|| vec![
 ///     CommandItem {
@@ -75,7 +77,7 @@ const KBD_CLASS: &str = "dm-kbd";
 ///         items=items
 ///         on_select=Callback::new(move |id: String| { /* handle */ })
 ///     />
-/// }
+/// };
 /// ```
 #[component]
 pub fn CommandPalette(
@@ -181,16 +183,18 @@ pub fn CommandPalette(
             Some(w) => w,
             None => return,
         };
-        let cb = Closure::<dyn Fn(web_sys::KeyboardEvent)>::new(move |ev: web_sys::KeyboardEvent| {
-            if ev.key() == "Escape" && open.get_untracked() {
-                open.set(false);
-            }
-        });
+        let cb =
+            Closure::<dyn Fn(web_sys::KeyboardEvent)>::new(move |ev: web_sys::KeyboardEvent| {
+                if ev.key() == "Escape" && open.get_untracked() {
+                    open.set(false);
+                }
+            });
         let _ = window.add_event_listener_with_callback("keydown", cb.as_ref().unchecked_ref());
         let window = SendWrapper::new(window);
         let cb = SendWrapper::new(cb);
         on_cleanup(move || {
-            let _ = window.remove_event_listener_with_callback("keydown", cb.as_ref().unchecked_ref());
+            let _ =
+                window.remove_event_listener_with_callback("keydown", cb.as_ref().unchecked_ref());
         });
     });
 

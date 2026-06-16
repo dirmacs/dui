@@ -1,8 +1,8 @@
+use crate::ai_view::schema::*;
 use leptos::prelude::*;
+use std::cell::RefCell;
 use std::collections::HashMap;
 use std::rc::Rc;
-use std::cell::RefCell;
-use crate::ai_view::schema::*;
 
 /// Renders an LLM-generated UI schema using DUI components.
 ///
@@ -28,9 +28,9 @@ pub fn AiView(
         <div class=move || {
             let s = schema.get();
             let layout_class = match s.layout.as_deref() {
-                Some("grid") => "grid grid-cols-2 gap-4",
-                Some("row") => "flex flex-row gap-4 flex-wrap",
-                _ => "flex flex-col gap-4",
+                Some("grid") => "dm-ai-view-grid",
+                Some("row") => "dm-ai-view-row",
+                _ => "dm-ai-view-stack",
             };
             format!("{} {}", layout_class, class)
         }>
@@ -50,12 +50,12 @@ pub fn AiView(
                     let label = actions.submit_label.clone().unwrap_or_else(|| "Continue".to_string());
                     let skip = actions.skip_allowed.unwrap_or(false);
                     view! {
-                        <div class="flex gap-2 pt-2">
+                        <div class="dm-ai-actions">
                             {if skip {
                                 Some(view! {
                                     <button
                                         type="button"
-                                        class="px-4 py-2 rounded-lg text-sm border border-[var(--dm-border)] text-[var(--dm-text-muted)] hover:bg-[var(--dm-surface)]"
+                                        class="dm-ai-action-skip"
                                     >
                                         "Skip"
                                     </button>
@@ -63,7 +63,7 @@ pub fn AiView(
                             } else { None }}
                             <button
                                 type="button"
-                                class="px-4 py-2 rounded-lg text-sm font-medium bg-[var(--dm-accent)] text-white hover:opacity-90"
+                                class="dm-ai-action-submit"
                                 on:click=move |_| {
                                     let collected = vals.borrow().clone();
                                     (on_sub)(collected);
@@ -87,27 +87,27 @@ fn render_component(
         AiComponent::Heading { text, level } => {
             let lvl = level.unwrap_or(2);
             let cls = match lvl {
-                1 => "text-2xl font-bold",
-                3 => "text-lg font-semibold",
-                _ => "text-xl font-bold",
+                1 => "dm-text-2xl dm-font-bold dm-text-primary",
+                3 => "dm-text-lg dm-font-semibold dm-text-primary",
+                _ => "dm-text-xl dm-font-bold dm-text-primary",
             };
-            view! { <h2 class=cls style="color: var(--dm-text);">{text.clone()}</h2> }.into_any()
+            view! { <h2 class=cls>{text.clone()}</h2> }.into_any()
         }
         AiComponent::Text { content, muted } => {
-            let cls = if muted.unwrap_or(false) { "text-sm text-[var(--dm-text-muted)]" } else { "text-sm text-[var(--dm-text)]" };
+            let cls = if muted.unwrap_or(false) { "dm-text-sm dm-text-muted" } else { "dm-text-sm dm-text-primary" };
             view! { <p class=cls>{content.clone()}</p> }.into_any()
         }
         AiComponent::Divider {} => {
-            view! { <hr class="border-[var(--dm-border)]" /> }.into_any()
+            view! { <hr class="dm-divider" /> }.into_any()
         }
         AiComponent::ScoreRing { score, size, label } => {
             view! { <crate::score_ring::ScoreRing score=*score size=size.unwrap_or(120) label=None /> }.into_any()
         }
         AiComponent::Card { title, content, .. } => {
             view! {
-                <div class="p-4 rounded-lg border border-[var(--dm-border)] bg-[var(--dm-surface)]">
-                    {title.as_ref().map(|t| view! { <h3 class="text-sm font-semibold mb-1" style="color: var(--dm-text);">{t.clone()}</h3> })}
-                    <p class="text-sm" style="color: var(--dm-text-muted);">{content.clone()}</p>
+                <div class="dm-ai-card">
+                    {title.as_ref().map(|t| view! { <h3 class="dm-text-sm dm-font-semibold dm-mb-1 dm-text-primary">{t.clone()}</h3> })}
+                    <p class="dm-text-sm dm-text-muted">{content.clone()}</p>
                 </div>
             }.into_any()
         }
@@ -118,17 +118,17 @@ fn render_component(
         AiComponent::Progress { value, max, label } => {
             let pct = (*value / max.unwrap_or(100.0) * 100.0).min(100.0);
             view! {
-                <div class="flex flex-col gap-1">
-                    {label.as_ref().map(|l| view! { <span class="text-xs" style="color: var(--dm-text-muted);">{l.clone()}</span> })}
-                    <div class="h-2 rounded-full bg-[var(--dm-border)] overflow-hidden">
-                        <div class="h-full rounded-full bg-[var(--dm-accent)] transition-all" style=format!("width: {}%", pct) />
+                <div class="dm-ai-progress">
+                    {label.as_ref().map(|l| view! { <span class="dm-text-xs dm-text-muted">{l.clone()}</span> })}
+                    <div class="dm-ai-progress-track">
+                        <div class="dm-ai-progress-fill" style=format!("width: {}%", pct) />
                     </div>
                 </div>
             }.into_any()
         }
         // Interactive components render as static placeholders (signals managed by parent)
         _ => {
-            view! { <div class="text-xs text-[var(--dm-text-muted)]">{format!("[component]")}</div> }.into_any()
+            view! { <div class="dm-text-xs dm-text-muted">{format!("[component]")}</div> }.into_any()
         }
     }
 }

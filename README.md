@@ -4,7 +4,7 @@
     <strong>The component library Leptos deserves.</strong>
   </p>
   <p align="center">
-    29 accessible, signal-driven components. Dark-first design system. Zero JavaScript.
+    36 accessible, signal-driven components. Dark-first design system. Zero handwritten JavaScript.
   </p>
   <p align="center">
     <a href="https://crates.io/crates/dui-leptos"><img src="https://img.shields.io/crates/v/dui-leptos.svg" alt="crates.io"></a>
@@ -16,7 +16,7 @@
 
 ---
 
-DUI is a production-ready UI component library for [Leptos 0.8](https://leptos.dev) CSR applications. It ships 29 components with built-in accessibility (ARIA roles, keyboard navigation, focus management), a complete design token system via CSS custom properties, and dark/light mode support out of the box.
+DUI is a production-ready UI component library for [Leptos 0.8](https://leptos.dev) CSR applications. It ships 36 components with built-in accessibility (ARIA roles, keyboard navigation, focus management), a complete design token system via CSS custom properties, and dark/light mode support out of the box.
 
 It powers three shipping applications and is built by [Dirmacs](https://dirmacs.com).
 
@@ -32,8 +32,8 @@ DUI fills the gap: **styled, accessible, and built for teams that ship.**
 
 | | DUI | Thaw | Leptonic | Radix-Leptos |
 |---|---|---|---|---|
-| Components | 29 | ~60 | ~30 | 57 |
-| Styled | Yes (Tailwind) | Yes (Fluent) | Yes (custom) | No (headless) |
+| Components | 36 | ~60 | ~30 | 57 |
+| Styled | Yes (`.dm-*` CSS + tokens) | Yes (Fluent) | Yes (custom) | No (headless) |
 | Accessible | Yes | Partial | Partial | Yes |
 | Dark + Light | Yes | Yes | No | N/A |
 | Production apps | 3 | ? | ? | 0 |
@@ -43,7 +43,7 @@ DUI fills the gap: **styled, accessible, and built for teams that ship.**
 
 ```toml
 [dependencies]
-dui-leptos = "0.3"
+dui-leptos = "0.5"
 ```
 
 > **Note**: The crate is published as `dui-leptos` on crates.io, but the Rust import is just `dui`. This is intentional — `use dui::prelude::*` is all you need.
@@ -56,17 +56,7 @@ Copy `css/dui.css` to your project's static assets and link it:
 <link rel="stylesheet" href="/dui.css" />
 ```
 
-DUI components use [Tailwind CSS](https://tailwindcss.com) utility classes. Add `dui`'s source to your Tailwind content config so classes aren't purged:
-
-```js
-// tailwind.config.js
-module.exports = {
-  content: [
-    "./src/**/*.rs",
-    "./node_modules/dui-leptos/src/**/*.rs", // or your path
-  ],
-}
-```
+DUI components use stable `.dm-*` classes backed by CSS custom properties. You do **not** need Tailwind in downstream applications. Keep your app-specific CSS separate and override `--dm-*` tokens when you need branding changes.
 
 ## Quick Start
 
@@ -82,9 +72,9 @@ fn App() -> impl IntoView {
     let count = RwSignal::new(0);
 
     view! {
-        <Card class="p-6 max-w-sm mx-auto mt-10">
-            <h1 class="text-xl font-bold mb-4">"Hello DUI"</h1>
-            <p class="text-dm-muted mb-4">
+        <Card class="dm-p-6 dm-max-w-sm dm-mx-auto dm-mt-8">
+            <h1 class="dm-text-xl dm-font-bold dm-mb-4">"Hello DUI"</h1>
+            <p class="dm-text-muted dm-mb-4">
                 "Count: " {move || count.get().to_string()}
             </p>
             <Button
@@ -718,13 +708,13 @@ It brings character. You'll remember the name.
 Not yet. DUI targets CSR (Client-Side Rendering) via Trunk. SSR support is on the roadmap.
 
 **Can I use DUI without Tailwind?**
-The components use Tailwind utility classes internally. You need Tailwind configured in your project for the styling to work. The design tokens (`--dm-*`) are pure CSS custom properties though.
+Yes. DUI ships `css/dui.css` and its components use `.dm-*` classes plus CSS custom properties. Tailwind is not required for consumers.
 
 **How is DUI different from Thaw?**
-Thaw implements Microsoft's Fluent Design system. DUI has its own dark-first design language and is styled with Tailwind. If you want Fluent, use Thaw. If you want a practical, customizable library that looks great out of the box, use DUI.
+Thaw implements Microsoft's Fluent Design system. DUI has its own dark-first design language, `.dm-*` utility layer, and token system. If you want Fluent, use Thaw. If you want a practical, customizable library that looks great out of the box, use DUI.
 
 **Can I customize individual components?**
-Yes. Every component accepts a `class` prop for additional Tailwind classes. For deeper customization, override the `--dm-*` CSS tokens or fork the component source.
+Yes. Every component accepts a `class` prop for additional application classes. For deeper customization, override the `--dm-*` CSS tokens or fork the component source.
 
 ## Contributing
 
