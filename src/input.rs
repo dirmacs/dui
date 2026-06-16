@@ -15,10 +15,10 @@ pub enum InputType {
 impl InputType {
     fn as_str(&self) -> &'static str {
         match self {
-            InputType::Text     => "text",
+            InputType::Text => "text",
             InputType::Password => "password",
-            InputType::Search   => "search",
-            InputType::Email    => "email",
+            InputType::Search => "search",
+            InputType::Email => "email",
         }
     }
 }
@@ -78,10 +78,11 @@ pub fn Input(
                     placeholder=placeholder
                     disabled=disabled
                     class=move || format!(
-                        "dm-input {} {} {}",
+                        "dm-input {} {} {} {}",
                         if has_error() { "dm-input-error" } else { "" },
                         if search_icon { "dm-input-with-icon-left" } else { "" },
                         if disabled.get() { "dm-input-disabled" } else { "" },
+                        class,
                     )
                     prop:value=move || value.get()
                     on:input=move |ev| {

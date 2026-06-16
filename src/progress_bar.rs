@@ -60,6 +60,7 @@ pub fn ProgressBar(
                 aria-valuemin="0"
                 aria-valuemax="100"
                 class="dm-progress"
+                style=if height.is_empty() { String::new() } else { format!("height:{height}") }
             >
                 <div
                     class="dm-progress-fill"

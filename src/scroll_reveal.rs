@@ -48,7 +48,11 @@ pub fn ScrollReveal(
 
         // Check prefers-reduced-motion
         let prefers_reduced = web_sys::window()
-            .and_then(|w| w.match_media("(prefers-reduced-motion: reduce)").ok().flatten())
+            .and_then(|w| {
+                w.match_media("(prefers-reduced-motion: reduce)")
+                    .ok()
+                    .flatten()
+            })
             .map(|mql| mql.matches())
             .unwrap_or(false);
 
@@ -63,7 +67,10 @@ pub fn ScrollReveal(
         let callback = Closure::<dyn Fn(js_sys::Array, web_sys::IntersectionObserver)>::new(
             move |entries: js_sys::Array, observer: web_sys::IntersectionObserver| {
                 for i in 0..entries.length() {
-                    if let Some(entry) = entries.get(i).dyn_ref::<web_sys::IntersectionObserverEntry>() {
+                    if let Some(entry) = entries
+                        .get(i)
+                        .dyn_ref::<web_sys::IntersectionObserverEntry>()
+                    {
                         if entry.is_intersecting() {
                             let _ = el_clone.class_list().add_1("visible");
                             observer.unobserve(&el_clone);
@@ -73,8 +80,8 @@ pub fn ScrollReveal(
             },
         );
 
-        let mut options = web_sys::IntersectionObserverInit::new();
-        options.threshold(&JsValue::from_f64(0.1));
+        let options = web_sys::IntersectionObserverInit::new();
+        options.set_threshold(&JsValue::from_f64(0.1));
 
         if let Ok(observer) = web_sys::IntersectionObserver::new_with_options(
             callback.as_ref().unchecked_ref(),

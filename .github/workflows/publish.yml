@@ -1,0 +1,29 @@
+name: Publish dui-leptos
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Cargo.toml version to publish"
+        required: true
+        default: "0.5.0"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - name: Verify requested version
+        run: |
+          test "$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[0].version')" = "${{ inputs.version }}"
+      - name: Package dry run
+        run: cargo publish --dry-run
+      - name: Publish
+        run: cargo publish --token "$CARGO_REGISTRY_TOKEN"
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}

@@ -118,7 +118,7 @@ pub fn FileUpload(
                 if current_files.is_empty() { return view! { <div></div> }.into_any(); }
                 view! {
                     <div class="dm-flex dm-flex-col dm-gap-1">
-                        {current_files.iter().enumerate().map(|(idx, f)| {
+                        {current_files.iter().map(|f| {
                             let name = f.name.clone();
                             let size_kb = f.size / 1024;
                             view! {
