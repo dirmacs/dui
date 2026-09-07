@@ -40,6 +40,9 @@ pub fn Sidebar(
     /// Optional brand label.
     #[prop(default = "Dirmacs")]
     brand: &'static str,
+    /// Optional brand logo image URL (replaces the "D" icon).
+    #[prop(optional)]
+    brand_logo_url: Option<&'static str>,
 ) -> impl IntoView {
     let on_nav = std::rc::Rc::new(on_navigate);
 
@@ -50,7 +53,14 @@ pub fn Sidebar(
         )>
             // Brand header
             <div class="dm-sidebar-header">
-                <div class="dm-sidebar-brand-icon">"D"</div>
+                {match brand_logo_url {
+                    Some(url) => view! {
+                        <img src=url alt="" style="width:32px;height:32px;border-radius:var(--dm-radius-lg)" />
+                    }.into_any(),
+                    None => view! {
+                        <div class="dm-sidebar-brand-icon">"D"</div>
+                    }.into_any(),
+                }}
                 <Show when=move || !collapsed.get()>
                     <span class="dm-sidebar-brand-text">{brand}</span>
                     <button
