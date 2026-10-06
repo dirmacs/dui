@@ -1,0 +1,7 @@
+target/
+.git/
+.DS_Store
+*.swp
+*.log
+dist/
+node_modules/
